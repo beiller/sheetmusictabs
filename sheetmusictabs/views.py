@@ -1,23 +1,25 @@
-__author__ = 'itbxh'
-
+from sheetmusictabs.models import Tabs
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-import datetime
+import zlib
 
 
-def hello(request):
-    return HttpResponse("Hello world")
+def tab_list(request):
+    tabs = Tabs.objects.order_by('id')[:5]
+    for tab in tabs:
+        if tab.tab == None :
+            tab.tab = zlib.decompress(tab.gzip_tab)
+    return render(request, 'tablist.html', {'tabs': tabs})
 
 
-def current_datetime(request):
-    now = datetime.datetime.now()
-    return render(request, 'current_datetime.html', {'current_date': now})
-
-
-def hours_ahead(request, offset):
+def tab_page(request, tabid):
     try:
-        offset = int(offset)
+        pkid = int(tabid)
     except ValueError:
         raise Http404()
-    dt = datetime.datetime.now() + datetime.timedelta(hours=offset)
-    return render(request, 'current_datetime.html', {'current_date': dt})
+
+    tabs = [Tabs.objects.get(pk=pkid), ]
+    for tab in tabs:
+        if tab.tab == None :
+            tab.tab = zlib.decompress(tab.gzip_tab)
+    return render(request, 'tablist.html', {'tabs': tabs})
