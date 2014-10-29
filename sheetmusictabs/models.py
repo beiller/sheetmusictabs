@@ -26,7 +26,8 @@ class BandInfo(models.Model):
 
 
 class Comment(models.Model):
-    tab_id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
+    tab_id = models.IntegerField()
     name = models.CharField(max_length=25)
     comment = models.CharField(max_length=600)
     ip = models.CharField(max_length=15)

@@ -1,0 +1,14 @@
+{% extends "root.html" %}
+
+{% block title %}Tabs{% endblock %}
+
+{% block content %}
+    <h2>
+        {{ tab.name }} by {{ tab.band }}
+    </h2>
+    <pre>{{ tab.tab }}</pre>
+    {% for comment in comments %}
+        <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
+    {% endfor %}
+{% endblock %}
+
