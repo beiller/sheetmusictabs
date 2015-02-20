@@ -3,10 +3,19 @@
 {% block title %}Tabs{% endblock %}
 
 {% block content %}
+    <h1>
+        Sheet Music Tabs
+    </h1>
     <h2>
-        {{ tab.name }} by {{ tab.band }}
+        All sheets, music, lyrics, and tabs for guitar, bass, piano, drums and more!
     </h2>
-    <pre>{{ tab.tab }}</pre>
+    <h3>
+        {{ tab.name }}
+    </h3>
+    <h4>
+        by {{ tab.band }}
+    </h4>
+    <pre>{{ tab.tab|striptags }}</pre>
     {% for comment in comments %}
         <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
     {% endfor %}

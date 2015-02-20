@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <title>{% block title %}{% endblock %}</title>
+    {% include "analytics.html" %}
 </head>
 <body>
-    <h1>My helpful timestamp site</h1>
+	{% include "site_social.html" %}
+
+    {% include "facebook_like.html" %}
+
     {% block content %}{% endblock %}
     {% block footer %}
     <hr>
