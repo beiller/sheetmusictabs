@@ -7,9 +7,18 @@
         {{ tab.name }}
     </h3>
     <h4>
-        by {{ tab.band }}
+        by <i>{{ tab.band }}</i>
     </h4>
-    <pre>{{ tab.tab|striptags }}</pre>
+
+    {% for chord in tab.chords %}
+        <div style="float: left;">
+            <div style="text-align: center"><strong>{{ chord }}</strong></div>
+            <div id="{{ chord }}"></div>
+        </div>
+        <script type="text/javascript">Raphael.chord('{{ chord }}', '{{ chord }}').element.setSize(75, 75);</script>
+    {% endfor %}
+
+    <pre style="clear: both; margin-top: 10px; padding-top: 10px">{{ tab.tab|striptags }}</pre>
     {% for comment in comments %}
         <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
     {% endfor %}
