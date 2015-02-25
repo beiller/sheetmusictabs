@@ -1,3 +1,4 @@
+from django.template.defaultfilters import striptags
 from sheetmusictabs.models import Tabs, Comment
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -32,6 +33,20 @@ def parse_chords_list(text_input):
     return chords
 
 
+def annotate_chords(text_input):
+    chord_expression = (
+        '(\s)(([a-g])([#b])?\s?(min|maj|m|dim|5|6|7|maj7|9|maj9|11|13|maj13|min6|min7|'
+        'min9|min11|min13|sus2|sus4|dim|aug|6/9|7sus4|7b5|7b9|9sus4|add9|aug9)?)(\s\s)'
+    )
+    return re.sub(
+        chord_expression,
+        r"""\g<1><a href="#" onclick="show_diagram('\g<2>');">\g<2></a>\g<6>""",
+        text_input,
+        count=0,
+        flags=re.IGNORECASE
+    )
+
+
 def tab_page(request, tab_id):
     try:
         tab_id = int(tab_id)
@@ -45,6 +60,7 @@ def tab_page(request, tab_id):
     tab.chords = parse_chords_list(tab.tab)
     tab.band = re.sub(' tabs$', '', tab.band, re.IGNORECASE)
     tab.name = re.sub('\s+(Tab|Tabs|Chord|Chords)$', '', tab.name, re.IGNORECASE)
+    tab.tab = annotate_chords(striptags(tab.tab))
 
     return render(request, 'tab.html', {
         'tab': tab,
