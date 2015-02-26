@@ -20,9 +20,10 @@
             background-color: #eeeeff;
             color: #2222aa;
             border: none;
-            padding: 3px;
+            padding: 0px;
             text-decoration: none;
-            border: dotted 2px #ccccff;
+            border-top: dotted 2px #ccccff;
+            border-bottom: dotted 2px #ccccff;
         }
         #chord_popup {
             visibility: hidden;
@@ -57,6 +58,7 @@
         {% include "header.html" %}
 
         <div role="main" class="ui-content jqm-content">
+            {% include "search.html" %}
 
             {% block content %}{% endblock %}
             {% block footer %}

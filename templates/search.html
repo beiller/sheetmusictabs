@@ -1,0 +1,24 @@
+<form id="main_search">
+    <label>Search:</label> <input type="text" name="q" id="search_string" />
+    <input type="submit" value="Submit"/>
+</form>
+
+<div id="search_results_list"></div>
+<script type="text/javascript">
+$(document).on('submit', '#main_search', function(e) {
+    var q = $('#search_string').val();
+    $.getJSON('/ajax/search?q='+q, function(data) {
+      var items = [];
+
+      $.each(data, function(key, val) {
+        items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
+      });
+
+      $('<ul/>', {
+        'class': 'my-new-list',
+        html: items.join('')
+      }).appendTo('#search_results_list');
+    });
+    e.preventDefault();
+});
+</script>
