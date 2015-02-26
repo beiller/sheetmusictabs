@@ -10,17 +10,19 @@
         by <i>{{ tab.band }}</i>
     </h4>
 
-    {% for chord in tab.chords %}
-        <div style="float: left;">
-            <div style="text-align: center"><strong>{{ chord }}</strong></div>
-            <div id="{{ chord }}"></div>
-        </div>
-        <script type="text/javascript">Raphael.chord('{{ chord }}', '{{ chord }}').element.setSize(100, 100);</script>
-    {% endfor %}
+    <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
 
-    <pre style="clear: both; margin-top: 10px; padding-top: 10px; overflow: auto;">{{ tab.tab|safe }}</pre>
-    {% for comment in comments %}
-        <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
-    {% endfor %}
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3>Comments</h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        <ul data-role="listview">
+        {% for comment in comments %}
+            <li><h2>{{ comment.name }}</h2><p> {{ comment.comment }}</p></li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
 {% endblock %}
 

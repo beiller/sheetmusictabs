@@ -16,6 +16,31 @@
         div.smt-header h2.heading_social {
             margin: 0px; padding: 0px;
         }
+        a.show_diagram_link {
+            background-color: #eeeeff;
+            color: #2222aa;
+            border: none;
+            padding: 3px;
+            text-decoration: none;
+            border: dotted 2px #ccccff;
+        }
+        #chord_popup {
+            visibility: hidden;
+            background-color: #ffffff;
+            border: solid 1px;
+            padding: 0px;
+            margin: 0px;
+        }
+        #tab_viewer {
+            margin: 0px;
+            padding: 0px;
+
+            clear: both;
+            margin-top: 10px;
+            padding-top: 10px;
+            overflow: auto;
+            line-height: 22px;
+        }
     </style>
 </head>
 <body>
@@ -39,5 +64,41 @@
     </div>
     {% endblock %}
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+    <div id="chord_popup">
+        <a href="#" class="chord_popup_close">x</a>
+        <div id="chord_popup_diagram"></div>
+    </div>
+    <script type="text/javascript">
+        function close_chord_popup(e) {
+            $('#chord_popup').css('visibility', 'hidden');
+            $('#chord_popup_diagram').html('');
+        }
+
+        $(document).ready(function(e) {
+            $('.show_diagram_link').click(close_chord_popup);
+            $('.show_diagram_link').click(function(e) {
+                var elem = $( this );
+                $('#chord_popup').css('position', 'absolute').css('top', e.pageY-20+'px').css('left', e.pageX+'px')
+                    .css('visibility', 'visible');
+                $('#chord_popup_diagram').html('');
+                var exp = /\s*(([a-g])([#b])?\s?(min|maj|m|dim|5|6|7|maj7|9|maj9|11|13|maj13|min6|min7|min9|min11|min13|sus2|sus4|dim|aug|6\/9|7sus4|7b5|7b9|9sus4|add9|aug9)?)\s*/i;
+                var match = exp.exec(elem.html())
+                var note = match[2];
+                var sf = match[3]
+                var modifier = match[4];
+                if(modifier == 'm') {
+                    modifier = 'min';
+                }
+                parsed = note;
+                if(sf) { parsed += sf; }
+                if(modifier) { parsed += ' ' + modifier; }
+                Raphael.chord('chord_popup_diagram', parsed).element.setSize(100, 100);
+            });
+            $('#chord_popup').click(close_chord_popup);
+
+        });
+
+    </script>
+
 </body>
 </html>
