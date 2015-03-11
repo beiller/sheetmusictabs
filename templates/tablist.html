@@ -3,11 +3,31 @@
 {% block title %}Tabs{% endblock %}
 
 {% block content %}
-    {% for tab in tabs %}
-    <h2>
-        {{ tab.name }} by {{ tab.band }}
-    </h2>
-    <pre>{{ tab.tab }}</pre>
-    {% endfor %}
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3>Latest Sheets, Music, Lyrics and Tabs</h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        <ul data-role="listview">
+        {% for tab in tabs.latest_tabs %}
+        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}">"{{ tab.name }}" by {{ tab.band }}</a></li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3>Latest Discussion about a Sheet, Song, Lyric or Tab</h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        <ul data-role="listview">
+        {% for tab in tabs.latest_comments %}
+        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}">"{{ tab.name }}" by {{ tab.band }}</a></li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+
 {% endblock %}
 
