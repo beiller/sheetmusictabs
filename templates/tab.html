@@ -3,6 +3,9 @@
 {% block title %}Tabs{% endblock %}
 
 {% block content %}
+  {% with 'scroll_to' as scroll_to|safe %}
+    {{block.super}}
+  {% endwith %}
     <h3>
         {{ tab.name }}
     </h3>
@@ -12,6 +15,44 @@
 
     <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
 
+
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3>Add Your Comments</h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        {% if comments_form.errors %}
+            <h4 class="error" id="errors">Error!</h4>
+            <ul>
+            {% for field in comments_form %}
+                {% if field.errors %}
+                <li>
+                    <strong class="error">{{ field.label }}</strong> - {% for error in field.errors %}{{ error }}{% endfor %}
+                </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form id="comments_form" method="POST" data-ajax="false">
+            <label for="name" class="ui-hidden-accessible">Name:</label>
+            <input type="text" name="name" id="name" placeholder="Enter Name">
+
+            <label for="email" class="ui-hidden-accessible">E-mail:</label>
+            <input type="text" name="email" id="email" placeholder="Enter E-mail">
+
+            <label for="website" class="ui-hidden-accessible">Website:</label>
+            <input type="text" name="website" id="website" placeholder="Enter Website URL eg. http://www.mywebsite.com/">
+
+            <label for="comment" class="ui-hidden-accessible">Comment:</label>
+            <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here"></textarea>
+            {% csrf_token %}
+            <input type="submit" value="Submit" data-icon="check" data-iconpos="right" data-inline="true">
+        </form>
+      </div>
+    </div>
+
+    {% if comments %}
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">
       <div class="ui-bar ui-bar-a">
         <h3>Comments</h3>
@@ -19,10 +60,54 @@
       <div class="ui-body ui-body-a">
         <ul data-role="listview">
         {% for comment in comments %}
-            <li><h2>{{ comment.name }}</h2><p> {{ comment.comment }}</p></li>
+            <li><h2>{{ comment.name }}</h2> <p>{{ comment.comment }}</p></li>
         {% endfor %}
         </ul>
       </div>
     </div>
+    {% endif %}
+
+
+    <div id="chord_popup">
+        <a href="#" class="chord_popup_close"><span class="close_button">x</span></a>
+        <div id="chord_popup_diagram"></div>
+    </div>
+    <script type="text/javascript">
+        function close_chord_popup(e) {
+            $('#chord_popup').css('visibility', 'hidden');
+            $('#chord_popup_diagram').html('');
+        }
+
+        $(document).ready(function(e) {
+            {% if scroll_to %}
+                $('html, body').animate({
+                    scrollTop: {{ scroll_to|safe }}
+                }, 1000);
+            {% endif %}
+            $('.show_diagram_link').click(close_chord_popup);
+            $('.show_diagram_link').click(function(e) {
+                var elem = $( this );
+                $('#chord_popup').css('position', 'absolute').css('top', e.pageY-20+'px').css('left', e.pageX+'px')
+                    .css('visibility', 'visible');
+                $('#chord_popup_diagram').html('');
+                var exp = /\s*(([a-g])([#b])?\s?(min|maj|m|dim|5|6|7|maj7|9|maj9|11|13|maj13|min6|min7|min9|min11|min13|sus2|sus4|dim|aug|6\/9|7sus4|7b5|7b9|9sus4|add9|aug9)?)\s*/i;
+                var match = exp.exec(elem.html())
+                var note = match[2];
+                var sf = match[3]
+                var modifier = match[4];
+                if(modifier == 'm') {
+                    modifier = 'min';
+                }
+                parsed = note;
+                if(sf) { parsed += sf; }
+                if(modifier) { parsed += ' ' + modifier; }
+                Raphael.chord('chord_popup_diagram', parsed).element.setSize(100, 100);
+            });
+            $('#chord_popup').click(close_chord_popup);
+
+        });
+
+    </script>
+
 {% endblock %}
 

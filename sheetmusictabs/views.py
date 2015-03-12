@@ -1,12 +1,18 @@
 from django.template.defaultfilters import striptags
 from sheetmusictabs.models import Tabs, Comment, TabsFulltext
-from django.http import Http404, HttpResponse, JsonResponse
-from django.db.models import Q
-from urllib import urlencode
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 import zlib
 import settings
 import re
+from django import forms
+
+
+class CommentForm(forms.Form):
+    name = forms.CharField(max_length=20, required=True)
+    email = forms.EmailField(max_length=50, required=True)
+    website = forms.URLField(max_length=50, required=False)
+    comment = forms.CharField(max_length=250, required=True)
 
 
 def url_from_id(tab_id):
@@ -37,14 +43,7 @@ def tab_list(request):
             "name": tab.name,
             "band": tab.band
         })
-    """
-        SELECT comment.id, tabs.id, tabs.name, tabs.band
-        FROM comment
-        JOIN tabs ON tabs.id = comment.tab_id
-        WHERE comment.spam = 0
-        ORDER BY comment.id DESC LIMIT 10
 
-    """
     discussed = Comment.objects.filter(spam=0).select_related()[:10]
     for tab in discussed:
         template_data["latest_comments"].append({
@@ -82,9 +81,7 @@ def annotate_chords(text_input):
     )
     text_input = text_input.replace("\r\nfcf\r\n", '').replace('\r\n1000\r\n', '')
     for line in text_input.split("\n"):
-        #wcount = len(re.findall("[hijklmnopqrstuvwxyz\(\)0123456789(---)]", line))
-        #ncount = len(re.findall("[ABCDEFG(maj)(min)(m)5679/]", line))
-        likely_contains_notes = len(re.findall("[A-G]([#b]|(m|maj|min))", line)) > 0
+        likely_contains_notes = len(re.findall("[A-G]([#b]|(m|maj|min)|[5679])", line)) > 0
         likely_contains_notes = likely_contains_notes or re.match("^[A-G\s]+$", line) is not None
         if not likely_contains_notes:
             text_output.append(line)
@@ -99,11 +96,45 @@ def annotate_chords(text_input):
     return "\n".join(text_output)
 
 
+def detect_spam_by_ip(ip_address):
+    return len(Comment.objects.filter(ip=ip_address).filter(spam=1)[:3]) > 3
+
+
 def tab_page(request, tab_id):
+    #TODO menu panel (home, comment, print)
+    #TODO suggest similar tab links
+    #TODO hide stuff while printing
+    #TODO share link will share actual tab page
+    #TODO band info sidebar
+    #TODO vote up/down?
+    #TODO add to hit counter?
+    #TODO google adsense
+    #TODO search panel
+
     try:
         tab_id = int(tab_id)
     except ValueError:
         raise Http404()
+
+    form = CommentForm()
+    scroll_to = False
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
+            if not is_spam:
+                c = Comment(
+                    name=form.cleaned_data['name'],
+                    ip=request.META.get('REMOTE_ADDR'),
+                    comment=form.cleaned_data['comment'],
+                    tab_id=tab_id,
+                    spam=0
+                )
+                c.save()
+                scroll_to = '$(document).height()'
+        else:
+            scroll_to = '$("#errors").offset().top'
+
 
     tab = Tabs.objects.get(pk=tab_id)
     comments = Comment.objects.filter(tab_id=tab_id).filter(spam=0)
@@ -117,20 +148,21 @@ def tab_page(request, tab_id):
     return render(request, 'tab.html', {
         'tab': tab,
         'comments': comments,
+        'comments_form': form,
+        'scroll_to': scroll_to,
         'site_globals': settings.SITE_GLOBALS
     })
 
 
-#TODO THIS IS A SQL INJECTION FLAW WHYYYYYYYYY
 def search(request):
-    search_string = request.GET.get('q')
+    search_string = request.GET.get('q') + '*'
 
     #tabs = TabsFulltext.objects.filter(Q(name__search="+"+search_string) | Q(band__search="+"+search_string))[:20]
     tabs = TabsFulltext.objects.raw("""
         SELECT tabs.id, tabs.name, tabs.band
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name,tabs_fulltext.band) against (%s) LIMIT 20
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s IN BOOLEAN MODE ) LIMIT 20
     """, [search_string])
     response = {}
     for tab in tabs:

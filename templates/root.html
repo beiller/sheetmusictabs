@@ -5,7 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
+    <link rel="stylesheet" href="{% static 'themes/sheetmusictabs.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'themes/jquery.mobile.icons.min.css' %}" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
@@ -13,6 +18,8 @@
     <script type="text/javascript" src="{% static 'raphael.chord.js' %}"></script>
     {% include "analytics.html" %}
     <style type="text/css">
+        body #tab_viewer { font-family: Inconsolata; }
+
         div.smt-header h2.heading_social {
             margin: 0px; padding: 0px;
         }
@@ -53,6 +60,14 @@
             float: right;
             color: red;
         }
+
+        body div.tab_page div.smt-header a.heading-btn {
+            margin-top: 12px;
+        }
+
+        body div h4.error, body div strong.error {
+            color: #ff0000;
+        }
     </style>
 </head>
 <body>
@@ -78,41 +93,7 @@
     </div>
     {% endblock %}
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-    <div id="chord_popup">
-        <a href="#" class="chord_popup_close"><span class="close_button">x</span></a>
-        <div id="chord_popup_diagram"></div>
-    </div>
-    <script type="text/javascript">
-        function close_chord_popup(e) {
-            $('#chord_popup').css('visibility', 'hidden');
-            $('#chord_popup_diagram').html('');
-        }
 
-        $(document).ready(function(e) {
-            $('.show_diagram_link').click(close_chord_popup);
-            $('.show_diagram_link').click(function(e) {
-                var elem = $( this );
-                $('#chord_popup').css('position', 'absolute').css('top', e.pageY-20+'px').css('left', e.pageX+'px')
-                    .css('visibility', 'visible');
-                $('#chord_popup_diagram').html('');
-                var exp = /\s*(([a-g])([#b])?\s?(min|maj|m|dim|5|6|7|maj7|9|maj9|11|13|maj13|min6|min7|min9|min11|min13|sus2|sus4|dim|aug|6\/9|7sus4|7b5|7b9|9sus4|add9|aug9)?)\s*/i;
-                var match = exp.exec(elem.html())
-                var note = match[2];
-                var sf = match[3]
-                var modifier = match[4];
-                if(modifier == 'm') {
-                    modifier = 'min';
-                }
-                parsed = note;
-                if(sf) { parsed += sf; }
-                if(modifier) { parsed += ' ' + modifier; }
-                Raphael.chord('chord_popup_diagram', parsed).element.setSize(100, 100);
-            });
-            $('#chord_popup').click(close_chord_popup);
-
-        });
-
-    </script>
 
 </body>
 </html>
