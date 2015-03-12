@@ -110,6 +110,7 @@ def tab_page(request, tab_id):
     #TODO add to hit counter?
     #TODO google adsense
     #TODO search panel
+    #TODO copyright
 
     try:
         tab_id = int(tab_id)
