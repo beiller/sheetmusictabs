@@ -1,8 +1,16 @@
 {% extends "root.html" %}
 
-{% block title %}Tabs{% endblock %}
+{% block title %}Sheet, Music, Tabs and More{% endblock %}
 
 {% block content %}
+<div data-role="page" class="tab_page" data-title="Sheet, Music, Tabs and More">
+    {% include "search.html" %}
+
+    {% include "menu.html" %}
+
+    {% include "header.html" %}
+
+    <div role="main" class="ui-content">
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">
       <div class="ui-bar ui-bar-a">
         <h3>Latest Sheets, Music, Lyrics and Tabs</h3>
@@ -10,7 +18,7 @@
       <div class="ui-body ui-body-a">
         <ul data-role="listview">
         {% for tab in tabs.latest_tabs %}
-        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}">"{{ tab.name }}" by {{ tab.band }}</a></li>
+        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
         {% endfor %}
         </ul>
       </div>
@@ -23,11 +31,12 @@
       <div class="ui-body ui-body-a">
         <ul data-role="listview">
         {% for tab in tabs.latest_comments %}
-        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}">"{{ tab.name }}" by {{ tab.band }}</a></li>
+        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
         {% endfor %}
         </ul>
       </div>
     </div>
-
+    </div>
+</div>
 {% endblock %}
 

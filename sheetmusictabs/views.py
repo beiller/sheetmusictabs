@@ -109,7 +109,6 @@ def tab_page(request, tab_id):
     #TODO vote up/down?
     #TODO add to hit counter?
     #TODO google adsense
-    #TODO search panel
     #TODO copyright
 
     try:

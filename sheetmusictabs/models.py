@@ -28,7 +28,7 @@ class BandInfo(models.Model):
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     tab = models.ForeignKey("Tabs")
-    #tab_id = models.IntegerField()
+    #tab_id = models.IntegerField() #this is created by the foreign key apparently
     name = models.CharField(max_length=25)
     comment = models.CharField(max_length=600)
     ip = models.CharField(max_length=15)

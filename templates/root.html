@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Sheet-Music-Tabs.com{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'themes/sheetmusictabs.min.css' %}" />
     <link rel="stylesheet" href="{% static 'themes/jquery.mobile.icons.min.css' %}" />
@@ -68,6 +68,7 @@
         body div h4.error, body div strong.error {
             color: #ff0000;
         }
+
     </style>
 </head>
 <body>
@@ -80,18 +81,8 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
 
-    <div data-role="page" class="tab_page">
-        {% include "header.html" %}
+    {% block content %}{% endblock %}
 
-        <div role="main" class="ui-content">
-
-            {% include "search.html" %}
-
-            {% block content %}{% endblock %}
-            {% block footer %}
-        </div>
-    </div>
-    {% endblock %}
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 
 

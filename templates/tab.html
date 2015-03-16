@@ -1,11 +1,16 @@
 {% extends "root.html" %}
 
-{% block title %}Tabs{% endblock %}
+{% block title %}{{ tab.name }} by {{ tab.band }}{% endblock %}
 
 {% block content %}
-  {% with 'scroll_to' as scroll_to|safe %}
-    {{block.super}}
-  {% endwith %}
+<div data-role="page" class="tab_page" data-title="{{ tab.name }} by {{ tab.band }}">
+    {% include "search.html" %}
+
+    {% include "menu.html" %}
+
+    {% include "header.html" %}
+
+    <div role="main" class="ui-content">
     <h3>
         {{ tab.name }}
     </h3>
@@ -18,7 +23,7 @@
 
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">
       <div class="ui-bar ui-bar-a">
-        <h3>Add Your Comments</h3>
+        <h3><a name="comments_heading">Add Your Comments</a></h3>
       </div>
       <div class="ui-body ui-body-a">
         {% if comments_form.errors %}
@@ -108,6 +113,7 @@
         });
 
     </script>
-
+    </div>
+</div>
 {% endblock %}
 

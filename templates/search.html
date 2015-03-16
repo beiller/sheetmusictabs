@@ -1,25 +1,31 @@
-<form id="main_search">
-    <label>Search:</label> <input type="text" name="q" id="search_string" />
-    <input type="submit" value="Submit"/>
-</form>
+<div data-role="panel" id="search_panel" data-display="overlay" data-position="right">
+    <form id="main_search">
+        <label>Search:</label> <input type="text" name="q" id="search_string" />
+        <input type="submit" value="Submit" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-search" />
+    </form>
 
-<div id="search_results_list"></div>
-<script type="text/javascript">
-$(document).on('submit', '#main_search', function(e) {
-    var q = $('#search_string').val();
-    $.getJSON('/ajax/search?q='+q, function(data) {
-      var items = [];
+    <div id="search_results_list"></div>
 
-      $.each(data, function(key, val) {
-        items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
-      });
+    <a href="#" data-rel="close" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-delete">Close panel</a>
 
-      $('#search_results_list').html('');
-      $('<ul/>', {
-        'class': 'my-new-list',
-        html: items.join('')
-      }).appendTo('#search_results_list');
+    <script type="text/javascript">
+    $(document).on('submit', '#main_search', function(e) {
+        alert('here');
+        var q = $('#search_string').val();
+        $.getJSON('/ajax/search?q='+q, function(data) {
+          var items = [];
+
+          $.each(data, function(key, val) {
+            items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
+          });
+
+          $('#search_results_list').html('');
+          $('<ul/>', {
+            'class': 'my-new-list',
+            html: items.join('')
+          }).appendTo('#search_results_list');
+        });
+        e.preventDefault();
     });
-    e.preventDefault();
-});
-</script>
+    </script>
+</div><!-- /panel -->
