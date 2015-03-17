@@ -1,4 +1,4 @@
-<div data-role="panel" id="search_panel" data-display="overlay" data-position="right">
+<div data-role="panel" id="search_panel" data-display="overlay" data-position="right" data-position-fixed="true">
     <form id="main_search">
         <label>Search:</label> <input type="text" name="q" id="search_string" />
         <input type="submit" value="Submit" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-search" />
@@ -10,7 +10,6 @@
 
     <script type="text/javascript">
     $(document).on('submit', '#main_search', function(e) {
-        alert('here');
         var q = $('#search_string').val();
         $.getJSON('/ajax/search?q='+q, function(data) {
           var items = [];
@@ -21,7 +20,7 @@
 
           $('#search_results_list').html('');
           $('<ul/>', {
-            'class': 'my-new-list',
+            'class': 'search-results-list',
             html: items.join('')
           }).appendTo('#search_results_list');
         });

@@ -1,5 +1,5 @@
-from django.template.defaultfilters import striptags
-from sheetmusictabs.models import Tabs, Comment, TabsFulltext
+from django.template.defaultfilters import striptags, register
+from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo
 from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 import zlib
@@ -100,16 +100,15 @@ def detect_spam_by_ip(ip_address):
     return len(Comment.objects.filter(ip=ip_address).filter(spam=1)[:3]) > 3
 
 
+@register.filter(name='info_split')
+def info_split(value):
+    return value.split(',')
+
+
 def tab_page(request, tab_id):
-    #TODO menu panel (home, comment, print)
-    #TODO suggest similar tab links
-    #TODO hide stuff while printing
-    #TODO share link will share actual tab page
-    #TODO band info sidebar
     #TODO vote up/down?
     #TODO add to hit counter?
     #TODO google adsense
-    #TODO copyright
 
     try:
         tab_id = int(tab_id)
@@ -138,16 +137,41 @@ def tab_page(request, tab_id):
 
     tab = Tabs.objects.get(pk=tab_id)
     comments = Comment.objects.filter(tab_id=tab_id).filter(spam=0)
+    band_info = BandInfo.objects.filter(band_name=tab.band).first()
+
     if tab.tab is None:
         tab.tab = zlib.decompress(tab.gzip_tab)
     #tab.chords = parse_chords_list(tab.tab)
     tab.band = re.sub(' tabs$', '', tab.band, re.IGNORECASE)
     tab.name = re.sub('\s+(Tab|Tabs|Chord|Chords)$', '', tab.name, re.IGNORECASE)
-    tab.tab = annotate_chords(striptags(tab.tab))
+    tab.tab = annotate_chords(striptags(tab.tab.strip()))
+
+    """
+                            SELECT
+                                tabs.id,
+                                CONCAT(tabs.name, ' by ', tabs.band) as e,
+                                tabs.name,
+                                tabs.band
+                        FROM tabs_fulltext
+                        JOIN tabs ON tabs.id = tabs_fulltext.id
+                        WHERE match (tabs_fulltext.name,tabs_fulltext.band) against ('{$this->search_string}')
+                        LIMIT 10
+    """
+    suggested_tabs_search = tab.name + ' ' + tab.band
+    suggested_tabs = TabsFulltext.objects.raw("""
+        SELECT tabs.id, tabs.name, tabs.band
+        FROM tabs_fulltext
+        JOIN tabs ON tabs.id = tabs_fulltext.id
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s IN BOOLEAN MODE ) LIMIT 5
+    """, [suggested_tabs_search])
+    for suggested_tab in suggested_tabs:
+        suggested_tab.url = url_from_tab(suggested_tab)
 
     return render(request, 'tab.html', {
         'tab': tab,
+        'suggested_tabs': [{'url': url_from_tab(t), 'name': t.name, 'band': t.band} for t in suggested_tabs],
         'comments': comments,
+        'band_info': band_info,
         'comments_form': form,
         'scroll_to': scroll_to,
         'site_globals': settings.SITE_GLOBALS

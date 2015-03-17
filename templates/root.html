@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Sheet-Music-Tabs.com{% endblock %}</title>
 
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
     <link rel="stylesheet" href="{% static 'themes/sheetmusictabs.min.css' %}" />
     <link rel="stylesheet" href="{% static 'themes/jquery.mobile.icons.min.css' %}" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
@@ -69,7 +71,27 @@
             color: #ff0000;
         }
 
+        body ul.search-results-list {
+            margin: 0px;
+            padding: 0px;
+        }
+        p.band-info-item {
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+
+        #menu_panel h5 {
+            margin-top: 9px;
+            margin-bottom: 2px;
+        }
+        #menu_panel h4.about-heading {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
     </style>
+
+    <link rel="stylesheet" href="{% static 'print.css' %}" type="text/css" media="print">
 </head>
 <body>
     <div id="fb-root"></div>
@@ -84,7 +106,6 @@
     {% block content %}{% endblock %}
 
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-
 
 </body>
 </html>
