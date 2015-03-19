@@ -137,6 +137,7 @@
             }
         }
 
+        head.ready(function () {
         $(document).ready(function(e) {
             {% if scroll_to %}
                 $('html, body').animate({
@@ -172,7 +173,8 @@
             //scaleTabViewer();
 
 
-        });
+        }); //end onready from jquery
+        }); //end head ready async loading
 
     </script>
 
