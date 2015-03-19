@@ -7,26 +7,4 @@
     <div id="search_results_list"></div>
 
     <a href="#" data-rel="close" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-delete">Close panel</a>
-
-    <script type="text/javascript">
-    $(document).on('submit', '#main_search', function(e) {
-        var q = $('#search_string').val();
-        $.getJSON('/ajax/search?q='+q, function(data) {
-          var items = [];
-
-          $.each(data, function(key, val) {
-            items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
-          });
-
-          $('#search_results_list').html('');
-          $('<ul/>', {
-            'class': 'search-results-list',
-            'data-role': 'listview',
-            html: items.join('')
-          }).appendTo('#search_results_list');
-          $('#search_results_list').trigger("create");
-        });
-        e.preventDefault();
-    });
-    </script>
 </div><!-- /panel -->
