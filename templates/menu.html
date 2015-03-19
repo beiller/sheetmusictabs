@@ -5,9 +5,11 @@
         <ul data-role="listview">
 
             <li><a href="/" data-ajax="false" title="Sheet Music Tabs Home Page" class="ui-btn ui-btn-icon-left ui-icon-home">Home</a></li>
-            <li><a href="#comments_heading" data-ajax="false" title="Add Comment" class="ui-btn ui-btn-icon-left ui-icon-edit">Add Your Comment</a></li>
             <li><a href="#top_heading" data-ajax="false" title="Add Comment" class="ui-btn ui-btn-icon-left ui-icon-arrow-u">Top of Page</a></li>
+            {% if tab %}
+            <li><a href="#comments_heading" data-ajax="false" title="Add Comment" class="ui-btn ui-btn-icon-left ui-icon-edit">Add Your Comment</a></li>
             <li><a href="#" onclick="window.print(); return false;" data-ajax="false" class="ui-btn ui-btn-icon-left ui-icon-action">Print This Page</a></li>
+            {% endif %}
         </ul>
 
         {% if band_info %}

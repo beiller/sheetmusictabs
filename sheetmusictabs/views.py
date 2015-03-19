@@ -105,6 +105,28 @@ def info_split(value):
     return value.split(',')
 
 
+def inject_adsense(tab, ad_code, insert_after=3):
+    """
+    This function will inject adsense ad in between lines
+    of the tab. Returns the string
+
+    Keyword arguments:
+    tab -- string representing the tab
+    """
+    occur = 0
+    output = ''
+    done = False
+    for line in tab.split('\n'):
+        if done is False and line.strip() == '':
+            occur += 1
+
+        if done is False and occur > insert_after:
+            output += ad_code + "\n"
+            done = True
+        output += line + "\n"
+    return output
+
+
 def tab_page(request, tab_id):
     #TODO vote up/down?
     #TODO add to hit counter?
@@ -144,19 +166,20 @@ def tab_page(request, tab_id):
     #tab.chords = parse_chords_list(tab.tab)
     tab.band = re.sub(' tabs$', '', tab.band, re.IGNORECASE)
     tab.name = re.sub('\s+(Tab|Tabs|Chord|Chords)$', '', tab.name, re.IGNORECASE)
-    tab.tab = annotate_chords(striptags(tab.tab.strip()))
+    tab.tab = annotate_chords(striptags(tab.tab))
+    ad_code = """
+<ins class="adsbygoogle"
+     style="display:inline-block;width:468px;height:15px"
+     data-ad-client="ca-pub-9811013802250997"
+     data-ad-slot="8553994049"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    """
+    tab.tab = inject_adsense(tab.tab, ad_code, insert_after=1)
+    tab.tab = inject_adsense(tab.tab, ad_code, insert_after=6)
+    tab.tab = tab.tab.strip()
 
-    """
-                            SELECT
-                                tabs.id,
-                                CONCAT(tabs.name, ' by ', tabs.band) as e,
-                                tabs.name,
-                                tabs.band
-                        FROM tabs_fulltext
-                        JOIN tabs ON tabs.id = tabs_fulltext.id
-                        WHERE match (tabs_fulltext.name,tabs_fulltext.band) against ('{$this->search_string}')
-                        LIMIT 10
-    """
     suggested_tabs_search = tab.name + ' ' + tab.band
     suggested_tabs = TabsFulltext.objects.raw("""
         SELECT tabs.id, tabs.name, tabs.band

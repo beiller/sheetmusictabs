@@ -10,7 +10,14 @@
 
     {% include "header.html" %}
 
+    <div id="zoom_widget">
+        <p class="zoom-title">Zoom</p>
+        <a href="#" onclick="zoom(0.1);" class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext">Zoom In</a><br/>
+        <a href="#" onclick="zoom(-0.1);" class="ui-btn ui-btn-inline ui-corner-all ui-icon-minus ui-btn-icon-notext">Zoom Out</a>
+    </div>
+
     <div role="main" class="ui-content">
+
     <h3>
         Song: {{ tab.name }}
     </h3>
@@ -25,15 +32,6 @@
          data-ad-client="ca-pub-9811013802250997"
          data-ad-slot="4814555689"
          data-ad-format="auto"></ins>
-    <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-
-    <!-- header2 -->
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:728px;height:90px"
-         data-ad-client="ca-pub-9811013802250997"
-         data-ad-slot="4337759055"></ins>
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
@@ -111,6 +109,34 @@
             $('#chord_popup_diagram').html('');
         }
 
+        /*
+            Do some scaling
+        */
+        var scrollWidth;
+        var currentFontSize = 1.0;
+
+        function zoom(d) {
+            currentFontSize += d;
+            var lineHeight = Math.max(currentFontSize, 1.1);
+            $( "#tab_viewer" ).css('font-size', currentFontSize+'em');
+            $( "#tab_viewer" ).css('line-height', lineHeight+'em');
+        }
+
+        function scaleTabViewer() {
+            var padding = 40;
+            var viewportWidth = $(window).width() - padding;
+
+            if(scrollWidth > viewportWidth) {
+                var ratio = viewportWidth / scrollWidth;
+                if(ratio < 0.6) {
+                    ratio = 0.6;
+                }
+                currentFontSize = ratio;
+                $( "#tab_viewer" ).css('font-size', ratio+'em');
+                $( "#tab_viewer" ).css('font-family', 'Inconsolata');
+            }
+        }
+
         $(document).ready(function(e) {
             {% if scroll_to %}
                 $('html, body').animate({
@@ -137,6 +163,14 @@
                 Raphael.chord('chord_popup_diagram', parsed).element.setSize(100, 100);
             });
             $('#chord_popup').click(close_chord_popup);
+
+
+            //$(window).resize(scaleTabViewer);
+            //$( window ).on( "orientationchange", scaleTabViewer);
+            scrollWidth = document.getElementById('tab_viewer').scrollWidth;
+            //resize initial window
+            //scaleTabViewer();
+
 
         });
 

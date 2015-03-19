@@ -21,8 +21,10 @@
           $('#search_results_list').html('');
           $('<ul/>', {
             'class': 'search-results-list',
+            'data-role': 'listview',
             html: items.join('')
           }).appendTo('#search_results_list');
+          $('#search_results_list').trigger("create");
         });
         e.preventDefault();
     });

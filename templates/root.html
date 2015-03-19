@@ -10,26 +10,49 @@
 
     <link rel="stylesheet" href="{% static 'themes/sheetmusictabs.min.css' %}" />
     <link rel="stylesheet" href="{% static 'themes/jquery.mobile.icons.min.css' %}" />
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <link rel="stylesheet" href="{% static 'jquery.mobile.structure-1.4.5.min.css' %}" />
 
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="{% static 'jquery-1.11.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery.mobile-1.4.5.min.js' %}"></script>
     <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
     <script type="text/javascript" src="{% static 'raphael-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'raphael.chord.js' %}"></script>
     {% include "analytics.html" %}
     <style type="text/css">
-        body #tab_viewer { font-family: Inconsolata; }
+
+        body #tab_viewer, body #tab_viewer a.show_diagram_link { font-size: 1.0em; font-family: "Lucida Console", Monaco, monospace; line-height: 1.1em; }
+        body div#tav_viewer {
+            overflow-y: hidden;
+        }
+        div#zoom_widget {
+            position: fixed;
+            right: 0px;
+            top: 110px;
+        }
+        p.zoom-title {
+            display: block;
+            font-size: 0.75em;
+        }
 
         div.smt-header h2.heading_social {
             margin: 0px; padding: 0px;
+        }
+        body div#search_results_list ul li a {
+            white-space: normal;
+        }
+        body div div.smt-header a.menu-btn {
+            margin-left: 10px;
+        }
+        body div div.smt-header a.search-btn {
+            margin-right: 10px;
         }
         a.show_diagram_link {
             background-color: #eeeeff;
             color: #2222aa;
             border: none;
             padding: 0px;
+            margin: 0px;
+            display: inline;
             text-decoration: none;
             border-top: dotted 2px #ccccff;
             border-bottom: dotted 2px #ccccff;
