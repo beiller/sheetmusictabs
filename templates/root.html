@@ -7,6 +7,7 @@
     <title>{% block title %}Sheet-Music-Tabs.com{% endblock %}</title>
 
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
     <script src="{% static 'head.load.min.js' %}"></script>
     <script>
         head.load(
@@ -15,10 +16,13 @@
             "{% static 'themes/jquery.mobile.icons.min.css' %}",
             "{% static 'jquery.mobile.structure-1.4.5.min.css' %}",
             "{% static 'jquery.mobile-1.4.5.min.js' %}",
+            "https://apis.google.com/js/platform.js",
+            "{% static 'raphael-min.js' %}",
+            "{% static 'raphael.chord.js' %}",
+            "https://apis.google.com/js/plusone.js",
             "{% static 'print.css' %}"
         );
     </script>
-    <script type="text/javascript" src=""></script>
 
     {% include "analytics.html" %}
     <style type="text/css">
@@ -128,9 +132,5 @@
     }(document, 'script', 'facebook-jssdk'));</script>
 
     {% block content %}{% endblock %}
-    <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
-    <script type="text/javascript" src="{% static 'raphael-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'raphael.chord.js' %}"></script>
-    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 </body>
 </html>
