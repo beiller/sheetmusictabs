@@ -8,8 +8,8 @@
 
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
-    <script src="{% static 'head.load.min.js' %}"></script>
     <script>
+        {% include "head.load.min.js" %}
         head.load(
             "{% static 'jquery-1.11.1.min.js' %}",
             "{% static 'themes/sheetmusictabs.min.css' %}",
