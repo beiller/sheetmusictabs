@@ -214,7 +214,7 @@ def filter_search_results(tabs, search_string):
         if search_string in tab.band.lower():
             score += 1
         match_map.append((score, tab))
-    return sorted(match_map, key=lambda t: t[0], reverse=True)   # sort by score
+    return sorted(match_map, key=lambda t: t[0], reverse=True)[:15]   # sort by score
 
 
 def search(request):
