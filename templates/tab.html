@@ -67,16 +67,16 @@
 
         <form id="comments_form" method="POST" data-ajax="false">
             <label for="name" class="ui-hidden-accessible">Name:</label>
-            <input type="text" name="name" id="name" placeholder="Enter Name">
+            <input type="text" name="name" id="name" placeholder="Enter Name" value="{{ comments_form.name.value|default_if_none:'' }}"/>
 
             <label for="email" class="ui-hidden-accessible">E-mail:</label>
-            <input type="text" name="email" id="email" placeholder="Enter E-mail">
+            <input type="text" name="email" id="email" placeholder="Enter E-mail" value="{{ comments_form.email.value|default_if_none:'' }}"/>
 
             <label for="website" class="ui-hidden-accessible">Website:</label>
-            <input type="text" name="website" id="website" placeholder="Enter Website URL eg. http://www.mywebsite.com/">
+            <input type="text" name="website" id="website" placeholder="Enter Website URL eg. http://www.mywebsite.com/" value="{{ comments_form.website.value|default_if_none:'' }}"/>
 
             <label for="comment" class="ui-hidden-accessible">Comment:</label>
-            <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here"></textarea>
+            <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here">{{ comments_form.comment.value|default_if_none:'' }}</textarea>
             {% csrf_token %}
             <input type="submit" value="Submit" data-icon="check" data-iconpos="right" data-inline="true">
         </form>

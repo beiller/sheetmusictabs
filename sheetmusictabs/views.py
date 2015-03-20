@@ -130,7 +130,6 @@ def inject_adsense(tab, ad_code, insert_after=3):
 def tab_page(request, tab_id):
     #TODO vote up/down?
     #TODO add to hit counter?
-    #TODO google adsense
 
     try:
         tab_id = int(tab_id)
