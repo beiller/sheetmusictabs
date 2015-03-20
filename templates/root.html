@@ -34,9 +34,6 @@
         }
 
         body #tab_viewer, body #tab_viewer a.show_diagram_link { font-size: 1.0em; font-family: "Lucida Console", Monaco, monospace; line-height: 1.1em; }
-        body div#tab_viewer {
-            overflow-y: hidden;
-        }
         div#zoom_widget {
             position: fixed;
             right: 0px;
@@ -84,7 +81,8 @@
             clear: both;
             margin-top: 10px;
             padding-top: 10px;
-            overflow: auto;
+            overflow-x: auto;
+            overflow-y: hidden;
             line-height: 22px;
         }
         a span.close_button {
