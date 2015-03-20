@@ -8,13 +8,14 @@
 
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
+
+    <script>{% include "head.load.min.js" %}</script>
+    <script>{% include "jquery-1.11.1.min.js" %}</script>
+    <script type="text/javascript">{% include "jquery.mobile-1.4.5.min.js" %}</script>
     <script>
-        {% include "head.load.min.js" %}
         head.load(
-            "{% static 'jquery-1.11.1.min.js' %}",
-            "{% static 'themes/sheetmusictabs.min.css' %}",
+            //"{% static 'jquery.mobile-1.4.5.min.js' %}",
             "{% static 'themes/jquery.mobile.icons.min.css' %}",
-            "{% static 'jquery.mobile-1.4.5.min.js' %}",
             "https://apis.google.com/js/platform.js",
             "{% static 'raphael-min.js' %}",
             "{% static 'raphael.chord.js' %}",
@@ -26,6 +27,7 @@
     {% include "analytics.html" %}
     <style type="text/css">
         {% include "jquery.mobile.structure-1.4.5.min.css"  %}
+        {% include "sheetmusictabs.min.css"  %}
 
         body #tab_viewer, body #tab_viewer a.show_diagram_link { font-size: 1.0em; font-family: "Lucida Console", Monaco, monospace; line-height: 1.1em; }
         body div#tav_viewer {
