@@ -1,3 +1,4 @@
+import difflib
 from django.template.defaultfilters import striptags, register
 from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo
 from django.http import Http404, JsonResponse, HttpResponseRedirect
@@ -184,7 +185,7 @@ def tab_page(request, tab_id):
         SELECT tabs.id, tabs.name, tabs.band
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s IN BOOLEAN MODE ) LIMIT 5
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) LIMIT 10
     """, [suggested_tabs_search])
     for suggested_tab in suggested_tabs:
         suggested_tab.url = url_from_tab(suggested_tab)
@@ -200,17 +201,36 @@ def tab_page(request, tab_id):
     })
 
 
+def similar(seq1, seq2):
+    return difflib.SequenceMatcher(a=seq1.lower(), b=seq2.lower()).ratio()
+
+
+def filter_search_results(tabs, search_string):
+    match_map = []
+    for tab in tabs:
+        score = similar(tab.name, search_string) + similar(tab.band, search_string)
+        if search_string in tab.name.lower():
+            score += 1
+        if search_string in tab.band.lower():
+            score += 1
+        match_map.append((score, tab))
+    return sorted(match_map, key=lambda t: t[0], reverse=True)   # sort by score
+
+
 def search(request):
-    search_string = request.GET.get('q') + '*'
+    search_string = request.GET.get('q')
 
     #tabs = TabsFulltext.objects.filter(Q(name__search="+"+search_string) | Q(band__search="+"+search_string))[:20]
     tabs = TabsFulltext.objects.raw("""
         SELECT tabs.id, tabs.name, tabs.band
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s IN BOOLEAN MODE ) LIMIT 20
-    """, [search_string])
-    response = {}
-    for tab in tabs:
-        response[tab.id] = {'name': tab.name, 'band': tab.band, 'url': url_from_tab(tab)}
-    return JsonResponse(response)
+        WHERE
+            MATCH(tabs_fulltext.band, tabs_fulltext.name) AGAINST ( %s IN BOOLEAN MODE )
+
+    """, [search_string + '*'])
+    tabs = filter_search_results(tabs, search_string)
+    response = []
+    for t in tabs:
+        response.append({'name': t[1].name, 'band': t[1].band, 'url': url_from_tab(t[1]), 'score': t[0]})
+    return JsonResponse(response, safe=False)
