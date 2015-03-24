@@ -24,11 +24,7 @@
     <h4>
         Band: {{ tab.band }}
     </h4>
-    <span id="vote_form">
-        <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
-        <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
-    </span>
-        <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
+    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- mobile_ad1 -->
     <ins class="adsbygoogle"
@@ -42,11 +38,22 @@
 
     <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
 
+    <span id="vote_form">
+        <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
+        <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
+    </span>
+    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
+
     {% if suggested_tabs %}
     <h3>Other Songs Like This</h3>
     <ul data-role="listview" data-inset="true">
     {% for suggested_tab in suggested_tabs %}
-        <li><a href="{{ suggested_tab.url }}" data-ajax="false"><strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}</a></li>
+        <li>
+            <a href="{{ suggested_tab.url }}" data-ajax="false">
+                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
+                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
+            </a>
+        </li>
     {% endfor %}
     </ul>
     {% endif %}

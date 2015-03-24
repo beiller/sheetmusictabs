@@ -190,8 +190,8 @@ def tab_page(request, tab_id):
     tab.tab = tab.tab.strip()
 
     suggested_tabs_search = tab.name + ' ' + tab.band
-    suggested_tabs = TabsFulltext.objects.raw("""
-        SELECT tabs.id, tabs.name, tabs.band
+    suggested_tabs = Tabs.objects.raw("""
+        SELECT tabs.*
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
         WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) LIMIT 10
@@ -201,7 +201,7 @@ def tab_page(request, tab_id):
 
     return render(request, 'tab.html', {
         'tab': tab,
-        'suggested_tabs': [{'url': url_from_tab(t), 'name': t.name, 'band': t.band} for t in suggested_tabs],
+        'suggested_tabs': [{'url': url_from_tab(t), 'name': t.name, 'band': t.band, 'vote_yes': t.vote_yes, 'vote_no': t.vote_no} for t in suggested_tabs],
         'comments': comments,
         'band_info': band_info,
         'comments_form': form,
