@@ -9,17 +9,15 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
 
-    <script>{% include "head.load.min.js" %}</script>
-    <script>{% include "jquery-1.11.1.min.js" %}</script>
+    <script type="text/javascript">{% include "head.load.min.js" %}</script>
+    <script type="text/javascript">{% include "jquery-1.11.1.min.js" %}</script>
     <script type="text/javascript">{% include "jquery.mobile-1.4.5.min.js" %}</script>
     <script>
         head.load(
-            "{% static 'themes/jquery.mobile.icons.min.css' %}",
             "https://apis.google.com/js/platform.js",
             "{% static 'raphael-min.js' %}",
             "{% static 'raphael.chord.js' %}",
-            "https://apis.google.com/js/plusone.js",
-            "{% static 'print.css' %}"
+            "https://apis.google.com/js/plusone.js"
         );
     </script>
 
@@ -27,6 +25,7 @@
     <style type="text/css">
         {% include "jquery.mobile.structure-1.4.5.min.css"  %}
         {% include "sheetmusictabs.min.css"  %}
+        {% include "jquery.mobile.icons.min.css"  %}
 
         h1.main-heading.ui-title {
             white-space: normal;

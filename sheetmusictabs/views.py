@@ -1,7 +1,7 @@
 import difflib
 from django.template.defaultfilters import striptags, register
 from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo
-from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.http import Http404, JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 import zlib
 import settings
@@ -45,7 +45,7 @@ def tab_list(request):
             "band": tab.band
         })
 
-    discussed = Comment.objects.filter(spam=0).select_related()[:10]
+    discussed = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
     for tab in discussed:
         template_data["latest_comments"].append({
             "url": url_from_tab(tab.tab),
@@ -139,7 +139,16 @@ def tab_page(request, tab_id):
 
     form = CommentForm()
     scroll_to = False
-    if request.method == 'POST':
+    if request.method == 'POST' and request.POST['method'] == 'vote':
+        tab = Tabs.objects.get(id=request.POST['tabid'])
+        if request.POST['submit'] == 'votedown':
+            tab.vote_no += 1
+            tab.save()
+        elif request.POST['submit'] == 'voteup':
+            tab.vote_yes += 1
+            tab.save()
+            return JsonResponse({'success': True})
+    elif request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))

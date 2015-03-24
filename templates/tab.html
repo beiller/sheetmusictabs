@@ -24,7 +24,11 @@
     <h4>
         Band: {{ tab.band }}
     </h4>
-
+    <span id="vote_form">
+        <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
+        <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
+    </span>
+        <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- mobile_ad1 -->
     <ins class="adsbygoogle"
@@ -139,6 +143,34 @@
 
         head.ready(function () {
         $(document).ready(function(e) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
             $(document).on('submit', '#main_search', function(e) {
                 var q = $('#search_string').val();
                 $.getJSON('/ajax/search?q='+q, function(data) {
@@ -164,6 +196,20 @@
                     scrollTop: {{ scroll_to|safe }}
                 }, 1000);
             {% endif %}
+            function voteThank() {
+                $('#vote_form').fadeOut( 900, function() {
+                    $('#vote_form').html("Thank You For Your Vote").fadeIn( 900 );
+                });
+            }
+            $('#voteup').click(function(e) {
+                $('#voteup').click(function() {});
+                $.ajax({type: "POST", success: voteThank, data: { 'method': 'vote', 'tabid': {{ tab.id }}, 'submit': 'voteup' }});
+            });
+            $('#votedown').click(function(e) {
+                $('#votedown').click(function() {});
+                $.ajax({type: "POST", success: voteThank, data: { 'method': 'vote', 'tabid': {{ tab.id }}, 'submit': 'votedown' }});
+            });
+
             $('.show_diagram_link').click(close_chord_popup);
             $('.show_diagram_link').click(function(e) {
                 var elem = $( this );
@@ -185,12 +231,7 @@
             });
             $('#chord_popup').click(close_chord_popup);
 
-
-            //$(window).resize(scaleTabViewer);
-            //$( window ).on( "orientationchange", scaleTabViewer);
             scrollWidth = document.getElementById('tab_viewer').scrollWidth;
-            //resize initial window
-            //scaleTabViewer();
 
 
         }); //end onready from jquery
