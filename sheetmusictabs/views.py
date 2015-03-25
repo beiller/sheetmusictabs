@@ -219,6 +219,10 @@ def filter_search_results(tabs, search_string):
     return sorted(match_map, key=lambda t: t[0], reverse=True)[:15]   # sort by score
 
 
+def sitemap(request):
+    return render(request, 'sitemap.xml', {'urls': [t.url for t in Tabs.objects.order_by('-id')[:5000]]})
+
+
 def search(request):
     search_string = request.GET.get('q')
 
