@@ -24,7 +24,7 @@
     <h4>
         Band: {{ tab.band }}
     </h4>
-    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
+    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span> Views: {{ tab.hit_count }}</h5>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- mobile_ad1 -->
     <ins class="adsbygoogle"
@@ -108,6 +108,23 @@
       </div>
     </div>
     {% endif %}
+
+
+    <h3>Latest Sheets, Music, Lyrics and Tabs</h3>
+
+    <ul data-role="listview" data-inset="true">
+    {% for tab in latest_tabs %}
+    <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
+    {% endfor %}
+    </ul>
+
+    <h3>Latest Discussion about a Sheet, Song, Lyric or Tab</h3>
+
+    <ul data-role="listview" data-inset="true">
+    {% for tab in discussed_tabs %}
+    <li><a href="{{ tab.tab.url }}" title="{{ tab.tab.name }} by {{ tab.tab.band }}" data-ajax="false">"{{ tab.tab.name }} by {{ tab.tab.band }}</a></li>
+    {% endfor %}
+    </ul>
 
 
     <div id="chord_popup">

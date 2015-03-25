@@ -1,4 +1,5 @@
 import difflib
+from django.db.models import F
 from django.template.defaultfilters import striptags, register
 from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo
 from django.http import Http404, JsonResponse, HttpResponseRedirect, HttpResponse
@@ -33,27 +34,18 @@ def url_from_tab(tab):
 
 
 def tab_list(request):
-    template_data = {
-        "latest_tabs": [],
-        "latest_comments": []
-    }
-    tabs = Tabs.objects.order_by('-id')[:10]
-    for tab in tabs:
-        template_data["latest_tabs"].append({
-            "url": url_from_tab(tab),
-            "name": tab.name,
-            "band": tab.band
-        })
+    latest_tabs = Tabs.objects.order_by('-id')[:25]
+    discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
+    highest_rated = Tabs.objects.filter(vote_yes__gt=F('vote_no')).filter(vote_yes__gte=5)[:10]
+    most_viewed = Tabs.objects.order_by('-hit_count')[:10]
 
-    discussed = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
-    for tab in discussed:
-        template_data["latest_comments"].append({
-            "url": url_from_tab(tab.tab),
-            "name": tab.tab.name,
-            "band": tab.tab.band
-        })
-
-    return render(request, 'tablist.html', {'tabs': template_data, 'site_globals': settings.SITE_GLOBALS})
+    return render(request, 'tablist.html', {
+        'latest_tabs': latest_tabs,
+        'discussed_tabs': discussed_tabs,
+        'highest_rated': highest_rated,
+        'most_viewed': most_viewed,
+        'site_globals': settings.SITE_GLOBALS
+    })
 
 
 def parse_chords_list(text_input):
@@ -129,9 +121,6 @@ def inject_adsense(tab, ad_code, insert_after=3):
 
 
 def tab_page(request, tab_id):
-    #TODO vote up/down?
-    #TODO add to hit counter?
-
     try:
         tab_id = int(tab_id)
     except ValueError:
@@ -165,8 +154,9 @@ def tab_page(request, tab_id):
         else:
             scroll_to = '$("#errors").offset().top'
 
-
     tab = Tabs.objects.get(pk=tab_id)
+    tab.hit_count += 1
+    tab.save()
     comments = Comment.objects.filter(tab_id=tab_id).filter(spam=0)
     band_info = BandInfo.objects.filter(band_name=tab.band).first()
 
@@ -194,14 +184,17 @@ def tab_page(request, tab_id):
         SELECT tabs.*
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) LIMIT 10
-    """, [suggested_tabs_search])
-    for suggested_tab in suggested_tabs:
-        suggested_tab.url = url_from_tab(suggested_tab)
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 10
+    """, [suggested_tabs_search, tab.id])
+
+    latest_tabs = Tabs.objects.order_by('-id')[:25]
+    discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
 
     return render(request, 'tab.html', {
         'tab': tab,
-        'suggested_tabs': [{'url': url_from_tab(t), 'name': t.name, 'band': t.band, 'vote_yes': t.vote_yes, 'vote_no': t.vote_no} for t in suggested_tabs],
+        'suggested_tabs': suggested_tabs,
+        'latest_tabs': latest_tabs,
+        'discussed_tabs': discussed_tabs,
         'comments': comments,
         'band_info': band_info,
         'comments_form': form,

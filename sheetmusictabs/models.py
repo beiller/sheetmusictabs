@@ -81,6 +81,14 @@ class Tabs(models.Model):
     vote_no = models.IntegerField()
     gzip_tab = models.TextField(blank=True)
 
+    @property
+    def url(self):
+        url = '/bands/' + self.band[0].upper() + '/'
+        url += self.band.replace(' ', '+')
+        url += '/' + str(self.id) + '/'
+        url += self.name.replace(' ', '+') + '.html'
+        return url
+
     class Meta:
         managed = False
         db_table = 'tabs'

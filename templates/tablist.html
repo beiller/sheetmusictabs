@@ -15,7 +15,7 @@
         <h3>Latest Sheets, Music, Lyrics and Tabs</h3>
 
         <ul data-role="listview" data-inset="true">
-        {% for tab in tabs.latest_tabs %}
+        {% for tab in latest_tabs %}
         <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
         {% endfor %}
         </ul>
@@ -23,7 +23,23 @@
         <h3>Latest Discussion about a Sheet, Song, Lyric or Tab</h3>
 
         <ul data-role="listview" data-inset="true">
-        {% for tab in tabs.latest_comments %}
+        {% for tab in discussed_tabs %}
+        <li><a href="{{ tab.tab.url }}" title="{{ tab.tab.name }} by {{ tab.tab.band }}" data-ajax="false">"{{ tab.tab.name }}" by {{ tab.tab.band }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <h3>Highest Rated</h3>
+
+        <ul data-role="listview" data-inset="true">
+        {% for tab in highest_rated %}
+        <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <h3>Most Viewed</h3>
+
+        <ul data-role="listview" data-inset="true">
+        {% for tab in most_viewed %}
         <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
         {% endfor %}
         </ul>

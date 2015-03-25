@@ -1,2 +1,4 @@
 sheetmusictabs/settings.py
 db.sqlite3
+crawler/*
+crawler
