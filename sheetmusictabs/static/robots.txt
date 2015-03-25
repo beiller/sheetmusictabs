@@ -1,4 +1,4 @@
-Sitemap: http://www.example.com/sitemap.xml
+Sitemap: https://www.sheet-music-tabs.com/sitemap.xml
 
 User-agent: *
 Disallow: /ajax
