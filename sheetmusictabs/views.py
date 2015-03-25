@@ -220,7 +220,7 @@ def filter_search_results(tabs, search_string):
 
 
 def sitemap(request):
-    return render(request, 'sitemap.xml', {'urls': [t.url for t in Tabs.objects.order_by('-id')[:5000]]})
+    return render(request, 'sitemap.xml', {'urls': [t.url for t in Tabs.objects.order_by('-id')[:40000]]})
 
 
 def search(request):
