@@ -72,7 +72,7 @@ class Heatmap(models.Model):
 
 
 class Tabs(models.Model):
-    id = models.IntegerField(primary_key=True)  # AutoField?
+    id = models.AutoField(primary_key=True)  # AutoField?
     name = models.CharField(max_length=300)
     band = models.CharField(max_length=300)
     tab = models.TextField(blank=True)

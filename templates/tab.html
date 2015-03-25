@@ -25,22 +25,22 @@
         Band: {{ tab.band }}
     </h4>
     <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span> Views: {{ tab.hit_count }}</h5>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- mobile_ad1 -->
+    <!-- mobile_ad3 -->
     <ins class="adsbygoogle"
-         style="display:block"
+         style="display:inline-block;width:300px;height:250px"
          data-ad-client="ca-pub-9811013802250997"
-         data-ad-slot="4814555689"
-         data-ad-format="auto"></ins>
+         data-ad-slot="6645078887"></ins>
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-
     <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
 
+    <h3>Help Rate This Tab by Voting Up or Down</h3>
     <span id="vote_form">
-        <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
-        <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
+        <div data-role="controlgroup">
+            <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
+            <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
+        </div>
     </span>
     <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
 
@@ -254,6 +254,9 @@
                 Raphael.chord('chord_popup_diagram', parsed).element.setSize(100, 100);
             });
             $('#chord_popup').click(close_chord_popup);
+            $('#close_ad_button_footer').click(function(e) {
+                $('#tab_page_footer').remove();
+            });
 
             scrollWidth = document.getElementById('tab_viewer').scrollWidth;
 
@@ -264,7 +267,18 @@
     </script>
 
         {% include "footer.html" %}
-    </div>
+    </div> <!-- end content -->
+    <div data-role="footer" data-position="fixed" id="tab_page_footer">
+        <a href="#" class="ui-btn ui-btn-inline ui-corner-all ui-icon-delete" id="close_ad_button_footer">Close Ad</a>
+        <!-- mobile_ad4 -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:320px;height:100px"
+             data-ad-client="ca-pub-9811013802250997"
+             data-ad-slot="8121812083"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div><!-- /footer -->
 
 </div>
 {% endblock %}
