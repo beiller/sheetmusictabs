@@ -34,10 +34,10 @@ def url_from_tab(tab):
 
 
 def tab_list(request):
-    latest_tabs = Tabs.objects.order_by('-id')[:25]
+    latest_tabs = Tabs.objects.defer("tab", "gzip_tab").order_by('-id')[:25]
     discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
-    highest_rated = Tabs.objects.filter(vote_yes__gt=F('vote_no')).filter(vote_yes__gte=5)[:10]
-    most_viewed = Tabs.objects.order_by('-hit_count')[:10]
+    highest_rated = Tabs.objects.defer("tab", "gzip_tab").filter(vote_yes__gt=F('vote_no')).filter(vote_yes__gte=5)[:10]
+    most_viewed = Tabs.objects.defer("tab", "gzip_tab").order_by('-hit_count')[:10]
 
     return render(request, 'tablist.html', {
         'latest_tabs': latest_tabs,
@@ -187,7 +187,7 @@ def tab_page(request, tab_id):
         WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 10
     """, [suggested_tabs_search, tab.id])
 
-    latest_tabs = Tabs.objects.order_by('-id')[:25]
+    latest_tabs = Tabs.objects.defer("tab", "gzip_tab").order_by('-id')[:25]
     discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
 
     return render(request, 'tab.html', {
@@ -220,10 +220,11 @@ def filter_search_results(tabs, search_string):
 
 
 def sitemap(request):
+    tlist = Tabs.objects.defer("tab").defer("gzip_tab").order_by('-id')[:40000]
     return render(
         request,
         'sitemap.xml',
-        {'urls': [t.url for t in Tabs.objects.order_by('-id')[:40000]]},
+        {'urls': [t.url for t in tlist]},
         content_type="text/xml"
     )
 
