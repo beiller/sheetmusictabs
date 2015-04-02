@@ -195,7 +195,7 @@
                 }
             });
 
-            $(document).on('submit', '#main_search', function(e) {
+            $('#main_search').submit(function(e) {
                 var q = $('#search_string').val();
                 $.getJSON('/ajax/search?q='+q, function(data) {
                   var items = [];
