@@ -120,6 +120,41 @@ def inject_adsense(tab, ad_code, insert_after=3):
     return output
 
 
+def band_letter_page(request, band_letter):
+    bands = Tabs.objects.raw("""
+        SELECT DISTINCT tabs.id, tabs.band
+        FROM tabs
+        WHERE tabs.band LIKE %s
+    """, band_letter + "%")
+    data = []
+    band_set = set()
+    for band in bands:
+        if band.band not in band_set:
+            band_set.add(band.band)
+            data.append({'url': '/bands/'+band_letter+'/'+band.band.replace(' ', '+')+'/', 'band': band.band})
+
+    return render(request, 'bands_by_letter.html', {
+        'band_letter': band_letter,
+        'bands': data,
+        'site_globals': settings.SITE_GLOBALS
+    })
+
+
+def band_page(request, band_name):
+    band_name = band_name.replace('+', ' ')
+    bands = Tabs.objects.raw("""
+        SELECT DISTINCT tabs.id, tabs.band, tabs.name
+        FROM tabs
+        WHERE tabs.band LIKE %s
+    """, band_name)
+
+    return render(request, 'band_page.html', {
+        'band_name': band_name,
+        'bands': bands,
+        'site_globals': settings.SITE_GLOBALS
+    })
+
+
 def tab_page(request, tab_id):
     try:
         tab_id = int(tab_id)

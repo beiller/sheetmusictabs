@@ -1,0 +1,85 @@
+{% extends "root.html" %}
+
+{% block title %}Sheet, Music, Tabs and More{% endblock %}
+
+{% block content %}
+<div data-role="page" class="tab_page" data-title="Sheet, Music, Tabs and More">
+    {% include "search.html" %}
+
+    {% include "menu.html" %}
+
+    {% include "header.html" %}
+
+    <div role="main" class="ui-content">
+
+        <h3>Bands Starting With the Letter "{{ band_letter }}"</h3>
+
+        <ul data-role="listview" data-inset="true">
+        {% for band in bands %}
+        <li><a href="{{ band.url }}" data-ajax="false">{{ band.band }}</a></li>
+        {% endfor %}
+        </ul>
+
+    <script type="text/javascript">
+        head.ready(function () {
+        $(document).ready(function(e) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $('#main_search').submit(function(e) {
+                var q = $('#search_string').val();
+                $.getJSON('/ajax/search?q='+q, function(data) {
+                  var items = [];
+
+                  $.each(data, function(key, val) {
+                    items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
+                  });
+
+                  $('#search_results_list').html('');
+                  $('<ul/>', {
+                    'class': 'search-results-list',
+                    'data-role': 'listview',
+                    html: items.join('')
+                  }).appendTo('#search_results_list');
+                  $('#search_results_list').trigger("create");
+                });
+                e.preventDefault();
+            });
+
+        }); //end onready from jquery
+        }); //end head ready async loading
+
+    </script>
+
+        {% include "footer.html" %}
+
+    </div>
+
+</div>
+{% endblock %}
+
