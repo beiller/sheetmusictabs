@@ -33,6 +33,51 @@
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
+
+    {% if extended_info %}
+        {% if extended_info.composers %}
+            <h5>Composed by: {{ extended_info.composers|join:", " }}</h5>
+        {% endif %}
+        {% if extended_info.albums %}
+            <h3>Albums:</h3>
+            <ul data-role="listview" data-inset="true">
+            {% for album in extended_info.albums %}
+                <li>
+                    <img src="{{ album.coverimg_src }}" />
+                    <h2>{{ album.albumname }}</h2>
+                    <p>
+                        {% if album.genre %}
+                        <strong>Genre:</strong> {{ album.genre }}
+                        {% endif %}
+                        {% if album.label %}
+                        <strong>Label:</strong> {{ album.label }}
+                        {% endif %}
+                        {% if album.song_duration %}
+                        <strong>Song Duration on Album:</strong> {{ album.song_duration }}
+                        {% endif %}
+                        {% if album.album_duration %}
+                        <strong>Album Duration:</strong> {{ album.album_duration }}
+                        {% endif %}
+                    </p>
+                    {% if album.releasedate %}
+                    <p><strong>Release Date:</strong> {{ album.releasedate }}</p>
+                    {% endif %}
+                    {% if album.moods %}
+                    <p><strong>Moods:</strong> {{ album.moods|join:", " }}</p>
+                    {% endif %}
+                    {% if album.styles %}
+                    <p><strong>Styles:</strong> {{ album.styles|join:", " }}</p>
+                    {% endif %}
+                    {% if album.themes %}
+                    <p><strong>Themes:</strong> {{ album.themes|join:", " }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <hr/>
+    {% endif %}
+
     <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
 
     <h3>Help Rate This Tab by Voting Up or Down</h3>

@@ -1,7 +1,8 @@
 import difflib
+import json
 from django.db.models import F
 from django.template.defaultfilters import striptags, register
-from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo
+from sheetmusictabs.models import Tabs, Comment, TabsFulltext, BandInfo, ExtendedInfo
 from django.http import Http404, JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 import zlib
@@ -234,6 +235,7 @@ def tab_page(request, tab_id):
         'band_info': band_info,
         'comments_form': form,
         'scroll_to': scroll_to,
+        'extended_info': json.loads(ExtendedInfo.objects.filter(tab=tab.id).first().info),
         'site_globals': settings.SITE_GLOBALS
     })
 

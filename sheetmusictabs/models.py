@@ -25,6 +25,15 @@ class BandInfo(models.Model):
         db_table = 'band_info'
 
 
+class ExtendedInfo(models.Model):
+    tab = models.IntegerField(primary_key=True)
+    info = models.TextField(blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'extended_info'
+
+
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     tab = models.ForeignKey("Tabs")
