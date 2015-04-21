@@ -225,7 +225,10 @@ def tab_page(request, tab_id):
 
     latest_tabs = Tabs.objects.defer("tab", "gzip_tab").order_by('-id')[:25]
     discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
-
+    ei = ExtendedInfo.objects.filter(tab=tab.id)
+    extended_info = None
+    if ei:
+        extended_info = json.loads(ei.first().info)
     return render(request, 'tab.html', {
         'tab': tab,
         'suggested_tabs': suggested_tabs,
@@ -235,7 +238,7 @@ def tab_page(request, tab_id):
         'band_info': band_info,
         'comments_form': form,
         'scroll_to': scroll_to,
-        'extended_info': json.loads(ExtendedInfo.objects.filter(tab=tab.id).first().info),
+        'extended_info': extended_info,
         'site_globals': settings.SITE_GLOBALS
     })
 
