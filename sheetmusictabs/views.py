@@ -229,6 +229,7 @@ def tab_page(request, tab_id):
     extended_info = None
     if ei:
         extended_info = json.loads(ei.first().info)
+        extended_info['albums'] = extended_info['albums'][0:3]
     return render(request, 'tab.html', {
         'tab': tab,
         'suggested_tabs': suggested_tabs,
