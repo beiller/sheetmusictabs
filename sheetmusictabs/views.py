@@ -228,9 +228,12 @@ def tab_page(request, tab_id):
     ei = ExtendedInfo.objects.filter(tab=tab.id)
     extended_info = None
     if ei:
-        extended_info = json.loads(ei.first().info)
-        if extended_info is not None and extended_info['albums'] is not None and len(extended_info['albums']) > 3:
-            extended_info['albums'] = extended_info['albums'][0:3]
+        try:
+            extended_info = json.loads(ei.first().info)
+            if extended_info is not None and extended_info['albums'] is not None and len(extended_info['albums']) > 3:
+                extended_info['albums'] = extended_info['albums'][0:3]
+        except TypeError:
+            pass
     return render(request, 'tab.html', {
         'tab': tab,
         'suggested_tabs': suggested_tabs,
