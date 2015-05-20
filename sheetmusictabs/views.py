@@ -164,7 +164,7 @@ def tab_page(request, tab_id):
 
     form = CommentForm()
     scroll_to = False
-    if request.method == 'POST' and request.POST['method'] == 'vote':
+    if request.method == 'POST' and 'method' in request.POST and request.POST['method'] == 'vote':
         tab = Tabs.objects.get(id=request.POST['tabid'])
         if request.POST['submit'] == 'votedown':
             tab.vote_no += 1
