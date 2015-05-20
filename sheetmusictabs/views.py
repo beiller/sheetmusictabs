@@ -220,7 +220,7 @@ def tab_page(request, tab_id):
         SELECT tabs.*
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 20
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 10
     """, [suggested_tabs_search, tab.id])
 
     ei = ExtendedInfo.objects.filter(tab=tab.id)
