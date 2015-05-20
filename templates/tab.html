@@ -52,7 +52,7 @@
             <ul data-role="listview" data-inset="true">
             {% for album in extended_info.albums %}
                 <li>
-                    <img src="{{ album.coverimg_src }}" class="album_image" />
+                    <img src="{{ album.coverimg_src|cut:"http:" }}" class="album_image" />
                     <h2>{{ album.albumname }}</h2>
                     <p>
                         {% if album.genre %}
