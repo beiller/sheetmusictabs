@@ -37,6 +37,10 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
+    <hr/>
+    <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
+    <hr/>
+
     {% if extended_info %}
         {% if extended_info.lyrics %}
             <div data-role="collapsible" >
@@ -87,8 +91,6 @@
         </div>
     {% endif %}
 
-    <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
-
     <h3>Help Rate This Tab by Voting Up or Down</h3>
     <span id="vote_form">
         <div data-role="controlgroup">
@@ -134,20 +136,6 @@
       </div>
     </div>
 
-    {% if suggested_tabs %}
-    <h3>Other Songs Like This</h3>
-    <ul data-role="listview" data-inset="true">
-    {% for suggested_tab in suggested_tabs %}
-        <li>
-            <a href="{{ suggested_tab.url }}" data-ajax="false">
-                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
-                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-
     {% if comments %}
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">
       <div class="ui-bar ui-bar-a">
@@ -163,23 +151,19 @@
     </div>
     {% endif %}
 
-
-    <h3>Latest Sheets, Music, Lyrics and Tabs</h3>
-
+    {% if suggested_tabs %}
+    <h3>Other Songs Like This</h3>
     <ul data-role="listview" data-inset="true">
-    {% for tab in latest_tabs %}
-    <li><a href="{{ tab.url }}" title="{{ tab.name }} by {{ tab.band }}" data-ajax="false">"{{ tab.name }}" by {{ tab.band }}</a></li>
+    {% for suggested_tab in suggested_tabs %}
+        <li>
+            <a href="{{ suggested_tab.url }}" data-ajax="false">
+                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
+                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
+            </a>
+        </li>
     {% endfor %}
     </ul>
-
-    <h3>Latest Discussion about a Sheet, Song, Lyric or Tab</h3>
-
-    <ul data-role="listview" data-inset="true">
-    {% for tab in discussed_tabs %}
-    <li><a href="{{ tab.tab.url }}" title="{{ tab.tab.name }} by {{ tab.tab.band }}" data-ajax="false">"{{ tab.tab.name }} by {{ tab.tab.band }}</a></li>
-    {% endfor %}
-    </ul>
-
+    {% endif %}
 
     <div id="chord_popup">
         <a href="#" class="chord_popup_close"><span class="close_button">x</span></a>

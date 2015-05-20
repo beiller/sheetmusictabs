@@ -220,11 +220,9 @@ def tab_page(request, tab_id):
         SELECT tabs.*
         FROM tabs_fulltext
         JOIN tabs ON tabs.id = tabs_fulltext.id
-        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 10
+        WHERE match (tabs_fulltext.name, tabs_fulltext.band) AGAINST ( %s ) AND tabs.id != %s LIMIT 20
     """, [suggested_tabs_search, tab.id])
 
-    latest_tabs = Tabs.objects.defer("tab", "gzip_tab").order_by('-id')[:25]
-    discussed_tabs = Comment.objects.filter(spam=0).select_related().order_by('-id')[:10]
     ei = ExtendedInfo.objects.filter(tab=tab.id)
     extended_info = None
     if ei:
@@ -237,8 +235,6 @@ def tab_page(request, tab_id):
     return render(request, 'tab.html', {
         'tab': tab,
         'suggested_tabs': suggested_tabs,
-        'latest_tabs': latest_tabs,
-        'discussed_tabs': discussed_tabs,
         'comments': comments,
         'band_info': band_info,
         'comments_form': form,
