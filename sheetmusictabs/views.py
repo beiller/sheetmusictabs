@@ -271,7 +271,7 @@ def sitemap_index(request):
     num_sitemaps = tcount / SITEMAP_SIZE
     urls = []
     for i in range(num_sitemaps):
-        urls.append('/sitemap%s.xml' % (i+1))
+        urls.append('https://www.sheet-music-tabs.com/sitemap%s.xml' % (i+1))
 
     return render(
         request,
