@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^bands/[A-Z0-9]/[^/]+/([0-9]+)/[^/]+$', sheetmusictabs.views.tab_page),
     url(r'^bands/([A-Z0-9])/$', sheetmusictabs.views.band_letter_page),
     url(r'^bands/[A-Z0-9]/([^/]+)/$', sheetmusictabs.views.band_page),
-    url(r'^sitemap.xml$', sheetmusictabs.views.sitemap),
+    url(r'^sitemap\.xml$', sheetmusictabs.views.sitemap_index),
+    url(r'^sitemap([1-9][0-9]*)\.xml$', sheetmusictabs.views.sitemap),
     url(r'^ajax/search.*$', sheetmusictabs.views.search)
 )

@@ -22,7 +22,10 @@
         Song: {{ tab.name }}
     </h3>
     <h4>
-        Band: {{ tab.band }}
+        Band: {{ tab.band }}<br/>
+        {% if extended_info.composers %}
+            Composed By: {{ extended_info.composers|join:", " }}
+        {% endif %}
     </h4>
     <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span> Views: {{ tab.hit_count }}</h5>
     <!-- mobile_ad3 -->
@@ -35,15 +38,21 @@
     </script>
 
     {% if extended_info %}
-        {% if extended_info.composers %}
-            <h5>Composed by: {{ extended_info.composers|join:", " }}</h5>
+        {% if extended_info.lyrics %}
+            <div data-role="collapsible" >
+                <h3>View Just Lyrics...</h3>
+                <p>
+                    {{ extended_info.lyrics|linebreaksbr }}
+                </p>
+             </div>
         {% endif %}
+        <div data-role="collapsible" >
+            <h3>View Albums that This Song Appears On...</h3>
         {% if extended_info.albums %}
-            <h3>Albums:</h3>
             <ul data-role="listview" data-inset="true">
             {% for album in extended_info.albums %}
                 <li>
-                    <img src="{{ album.coverimg_src }}" />
+                    <img src="{{ album.coverimg_src }}" class="album_image" />
                     <h2>{{ album.albumname }}</h2>
                     <p>
                         {% if album.genre %}
@@ -75,7 +84,7 @@
             {% endfor %}
             </ul>
         {% endif %}
-        <hr/>
+        </div>
     {% endif %}
 
     <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
@@ -88,20 +97,6 @@
         </div>
     </span>
     <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
-
-    {% if suggested_tabs %}
-    <h3>Other Songs Like This</h3>
-    <ul data-role="listview" data-inset="true">
-    {% for suggested_tab in suggested_tabs %}
-        <li>
-            <a href="{{ suggested_tab.url }}" data-ajax="false">
-                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
-                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
 
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">
       <div class="ui-bar ui-bar-a">
@@ -138,6 +133,20 @@
         </form>
       </div>
     </div>
+
+    {% if suggested_tabs %}
+    <h3>Other Songs Like This</h3>
+    <ul data-role="listview" data-inset="true">
+    {% for suggested_tab in suggested_tabs %}
+        <li>
+            <a href="{{ suggested_tab.url }}" data-ajax="false">
+                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
+                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
 
     {% if comments %}
     <div class="ui-corner-all custom-corners" style="margin-top:20px;">

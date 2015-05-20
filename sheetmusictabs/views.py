@@ -263,9 +263,26 @@ def filter_search_results(tabs, search_string):
         match_map.append((score, tab))
     return sorted(match_map, key=lambda t: t[0], reverse=True)[:15]   # sort by score
 
+SITEMAP_SIZE = 10000
 
-def sitemap(request):
-    tlist = Tabs.objects.defer("tab").defer("gzip_tab").order_by('-id')[:40000]
+def sitemap_index(request):
+    #tlist = Tabs.objects.defer("tab").defer("gzip_tab").order_by('-id')[:49990]
+    tcount = Tabs.objects.count()
+    num_sitemaps = tcount / SITEMAP_SIZE
+    urls = []
+    for i in range(num_sitemaps):
+        urls.append('/sitemap%s.xml' % (i+1))
+
+    return render(
+        request,
+        'sitemap_index.xml',
+        {'urls': urls},
+        content_type="text/xml"
+    )
+
+
+def sitemap(request, pagenum):
+    tlist = Tabs.objects.defer("tab").defer("gzip_tab").order_by('-id')[(int(pagenum)-1)*SITEMAP_SIZE:int(pagenum)*SITEMAP_SIZE]
     return render(
         request,
         'sitemap.xml',
@@ -276,6 +293,7 @@ def sitemap(request):
 
 def search(request):
     search_string = request.GET.get('q')
+
 
     #tabs = TabsFulltext.objects.filter(Q(name__search="+"+search_string) | Q(band__search="+"+search_string))[:20]
     tabs = TabsFulltext.objects.raw("""
