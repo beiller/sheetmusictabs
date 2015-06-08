@@ -95,9 +95,10 @@ def detect_spam_by_ip(ip_address):
 
 
 def detect_spam_by_content(content):
+    to_test = content.lower()
     words = ['ugg', 'http', 'href']
     for word in words:
-        if word in content:
+        if word in to_test:
             return True
     return False
 
