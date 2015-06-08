@@ -91,7 +91,15 @@ def annotate_chords(text_input):
 
 
 def detect_spam_by_ip(ip_address):
-    return len(Comment.objects.filter(ip=ip_address).filter(spam=1)[:3]) > 3
+    return len(Comment.objects.filter(ip=ip_address)[:4]) > 3
+
+
+def detect_spam_by_content(content):
+    words = ['ugg', 'http', 'href']
+    for word in words:
+        if word in content:
+            return True
+    return False
 
 
 @register.filter(name='info_split')
@@ -141,6 +149,15 @@ def band_letter_page(request, band_letter):
     })
 
 
+def comment_moderation_page(request):
+    comments = Comment.objects.filter(spam=0).order_by('-id')[:5000]
+
+    return render(request, 'comment_moderation.html', {
+        'comments': comments,
+        'site_globals': settings.SITE_GLOBALS
+    })
+
+
 def band_page(request, band_name):
     band_name = band_name.replace('+', ' ')
     bands = Tabs.objects.raw("""
@@ -177,6 +194,7 @@ def tab_page(request, tab_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
+            is_spam = is_spam or detect_spam_by_content(form.cleaned_data['comment'])
             if not is_spam:
                 c = Comment(
                     name=form.cleaned_data['name'],
