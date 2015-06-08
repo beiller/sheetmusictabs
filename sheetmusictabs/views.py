@@ -194,7 +194,8 @@ def tab_page(request, tab_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
-            is_spam = is_spam or detect_spam_by_content(form.cleaned_data['comment'])
+            if detect_spam_by_content(form.cleaned_data['comment']):
+                is_spam = True
             if not is_spam:
                 c = Comment(
                     name=form.cleaned_data['name'],
