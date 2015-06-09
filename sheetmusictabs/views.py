@@ -91,7 +91,7 @@ def annotate_chords(text_input):
 
 
 def detect_spam_by_ip(ip_address):
-    return len(Comment.objects.filter(ip=ip_address)[:4]) > 3
+    return len(Comment.objects.filter(ip=ip_address)[:20]) > 10
 
 
 def detect_spam_by_content(content):
