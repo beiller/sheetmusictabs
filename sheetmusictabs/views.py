@@ -95,9 +95,10 @@ def detect_spam_by_ip(ip_address):
 
 
 def detect_spam_by_content(content):
-    expr = re.compile('[\x00-\x7f]')
-    if expr.match(content):
-        return True
+    try:
+        content.decode('ascii')
+    except UnicodeDecodeError:
+        return False
     to_test = content.lower()
     words = ['ugg', 'http', 'href', 'viagra', 'preteen', 'online', 'cialis', 'pharmacy', 'prescription', 'lolita', 'nude', 'url', 'buy']
     for word in words:
