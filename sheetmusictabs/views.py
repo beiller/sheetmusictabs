@@ -9,6 +9,7 @@ import zlib
 import settings
 import re
 from django import forms
+from captcha.fields import ReCaptchaField
 
 
 class CommentForm(forms.Form):
@@ -16,6 +17,7 @@ class CommentForm(forms.Form):
     email = forms.EmailField(max_length=50, required=True)
     website = forms.URLField(max_length=50, required=False)
     comment = forms.CharField(max_length=250, required=True)
+    captcha = ReCaptchaField()
 
 
 def url_from_id(tab_id):
