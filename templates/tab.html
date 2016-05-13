@@ -130,6 +130,7 @@
 
             <label for="comment" class="ui-hidden-accessible">Comment:</label>
             <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here">{{ comments_form.comment.value|default_if_none:'' }}</textarea>
+            {{ comments_form.captcha }}
             {% csrf_token %}
             <input type="submit" value="Submit" data-icon="check" data-iconpos="right" data-inline="true">
         </form>
