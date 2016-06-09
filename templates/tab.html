@@ -4,10 +4,6 @@
 
 {% block content %}
 <div data-role="page" class="tab_page" data-title="{{ tab.name }} by {{ tab.band }}">
-    {% include "search.html" %}
-
-    {% include "menu.html" %}
-
     {% include "header.html" %}
 
     <div id="zoom_widget">
@@ -90,6 +86,10 @@
         {% endif %}
         </div>
     {% endif %}
+
+    {% include "search.html" %}
+
+    {% include "menu.html" %}
 
     <h3>Help Rate This Tab by Voting Up or Down</h3>
     <span id="vote_form">
@@ -204,7 +204,6 @@
             }
         }
 
-        head.ready(function () {
         $(document).ready(function(e) {
             function getCookie(name) {
                 var cookieValue = null;
@@ -301,7 +300,6 @@
 
 
         }); //end onready from jquery
-        }); //end head ready async loading
 
     </script>
 
