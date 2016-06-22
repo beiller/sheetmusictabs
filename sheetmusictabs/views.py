@@ -180,7 +180,7 @@ def band_page(request, band_name):
     })
 
 
-def tab_page(request, tab_id):
+def tab_data(request, tab_id):
     try:
         tab_id = int(tab_id)
     except ValueError:
@@ -258,7 +258,8 @@ def tab_page(request, tab_id):
                 extended_info['albums'] = extended_info['albums'][0:3]
         except TypeError:
             pass
-    return render(request, 'tab.html', {
+
+    return {
         'tab': tab,
         'suggested_tabs': suggested_tabs,
         'comments': comments,
@@ -267,7 +268,15 @@ def tab_page(request, tab_id):
         'scroll_to': scroll_to,
         'extended_info': extended_info,
         'site_globals': settings.SITE_GLOBALS
-    })
+    }
+
+
+def tab_page(request, tab_id):
+    return render(request, 'tab.html', tab_data(request, tab_id))
+
+
+def tab_page_json(request, tab_id):
+    return JsonResponse(tab_data(request, tab_id), safe=False)
 
 
 def similar(seq1, seq2):
@@ -286,6 +295,7 @@ def filter_search_results(tabs, search_string):
     return sorted(match_map, key=lambda t: t[0], reverse=True)[:15]   # sort by score
 
 SITEMAP_SIZE = 10000
+
 
 def sitemap_index(request):
     #tlist = Tabs.objects.defer("tab").defer("gzip_tab").order_by('-id')[:49990]

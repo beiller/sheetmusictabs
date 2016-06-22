@@ -1,0 +1,239 @@
+<div data-role="page" class="tab_page" data-title="{{ tab.name }} by {{ tab.band }}" id="tab-page">
+    <div data-role="panel" id="search_panel" data-display="overlay" data-position="right" data-position-fixed="true">
+        <form id="main_search">
+            <label>Search:</label> <input type="text" name="q" id="search_string" />
+            <input type="submit" value="Submit" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-search" />
+        </form>
+
+        <div id="search_results_list"></div>
+
+        <a href="#" data-rel="close" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-delete">Close panel</a>
+    </div><!-- /panel -->
+
+    <div data-role="panel" id="menu_panel" data-display="overlay" data-position="left" data-position-fixed="true">
+
+            <h4>{{ tab.name }}</h4>
+
+            <ul data-role="listview">
+
+                <li><a href="/" data-ajax="false" title="Sheet Music Tabs Home Page" class="ui-btn ui-btn-icon-left ui-icon-home">Home</a></li>
+                <li><a href="#top_heading" data-ajax="false" title="Add Comment" class="ui-btn ui-btn-icon-left ui-icon-arrow-u">Top of Page</a></li>
+                {% if tab %}
+                <li><a href="#comments_heading" data-ajax="false" title="Add Comment" class="ui-btn ui-btn-icon-left ui-icon-edit">Add Your Comment</a></li>
+                <li><a href="#" onclick="window.print(); return false;" data-ajax="false" class="ui-btn ui-btn-icon-left ui-icon-action">Print This Page</a></li>
+                {% endif %}
+            </ul>
+
+            {% if band_info %}
+                <h4 class="about-heading">About {{ tab.band }}</h4>
+                {% if band_info.genres %}
+                <h5>Genres</h5>
+                {% for g in band_info.genres %}
+                <p class="band-info-item">{{ g }}</p>
+                {% endfor %}
+                {% endif %}
+                {% if band_info.origin %}
+                <h5>Origin</h5><p class="band-info-item">{{ band_info.origin }}</p>
+                {% endif %}
+                {% if band_info.years_active %}
+                <h5>Years Active</h5><p class="band-info-item">{{ band_info.years_active }}</p>
+                {% endif %}
+                {% if band_info.members %}
+                <h5>Members</h5>
+                {% for g in band_info.members %}
+                <p class="band-info-item">{{ g }}</p>
+                {% endfor %}
+                {% endif %}
+            {% endif %}
+    </div>
+
+	<div data-role="header" class="smt-header" data-position="fixed" data-tap-toggle="true">
+        <a href="#menu_panel" class="ui-btn-left ui-btn ui-btn-inline ui-corner-all ui-btn-icon-left ui-icon-grid heading-btn ui-btn-icon-notext menu-btn">Menu</a>
+		<h1 class="main-heading">
+            <a name="top_heading"></a>
+            Sheet Music Tabs
+        </h1>
+        <h2 class="heading_social">
+            <div class="g-plusone" data-size="medium" data-annotation="none" data-href="https://www.sheet-music-tabs.com/"></div>
+            <div style="bottom: 5px" class="fb-like" data-href="https://www.sheet-music-tabs.com/" data-layout="button" data-action="like" data-show-faces="true" data-share="false"></div>
+            <div style="bottom: 5px" class="fb-share-button" data-layout="button"></div>
+        </h2>
+        <a href="#search_panel" class="ui-btn-right ui-btn ui-btn-inline ui-corner-all ui-btn-icon-right ui-icon-search heading-btn ui-btn-icon-notext search-btn">Search</a>
+    </div><!-- /header -->
+
+    <div id="zoom_widget">
+        <p class="zoom-title">Zoom</p>
+        <a href="#" onclick="zoom(0.1);" class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext">Zoom In</a><br/>
+        <a href="#" onclick="zoom(-0.1);" class="ui-btn ui-btn-inline ui-corner-all ui-icon-minus ui-btn-icon-notext">Zoom Out</a>
+    </div>
+
+    <div role="main" class="ui-content">
+    <h3>
+        Song: {{ tab.name }}
+    </h3>
+    <h4>
+        Band: {{ tab.band }}<br/>
+        {% if extended_info.composers %}
+            Composed By: {{ extended_info.composers|join(', ') }}
+        {% endif %}
+    </h4>
+    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span> Views: {{ tab.hit_count }}</h5>
+    <!-- mobile_ad3 -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:300px;height:250px"
+         data-ad-client="ca-pub-9811013802250997"
+         data-ad-slot="6645078887"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <hr/>
+    <pre id="tab_viewer">{{ tab.tab|safe }}</pre>
+    <hr/>
+
+    {% if extended_info %}
+        {% if extended_info.lyrics %}
+            <div data-role="collapsible" >
+                <h3>View Just Lyrics...</h3>
+                <p>
+                    {{ extended_info.lyrics|replace('\n', '<br/>', 'g') }}
+                </p>
+             </div>
+        {% endif %}
+        <div data-role="collapsible" >
+            <h3>View Albums that This Song Appears On...</h3>
+        {% if extended_info.albums %}
+            <ul data-role="listview" data-inset="true">
+            {% for album in extended_info.albums %}
+                <li>
+                    <img src="{{ album.coverimg_src }}" class="album_image" />
+                    <h2>{{ album.albumname }}</h2>
+                    <p>
+                        {% if album.genre %}
+                        <strong>Genre:</strong> {{ album.genre }}
+                        {% endif %}
+                        {% if album.label %}
+                        <strong>Label:</strong> {{ album.label }}
+                        {% endif %}
+                        {% if album.song_duration %}
+                        <strong>Song Duration on Album:</strong> {{ album.song_duration }}
+                        {% endif %}
+                        {% if album.album_duration %}
+                        <strong>Album Duration:</strong> {{ album.album_duration }}
+                        {% endif %}
+                    </p>
+                    {% if album.releasedate %}
+                    <p><strong>Release Date:</strong> {{ album.releasedate }}</p>
+                    {% endif %}
+                    {% if album.moods %}
+                    <p><strong>Moods:</strong> {{ album.moods|join(', ') }}</p>
+                    {% endif %}
+                    {% if album.styles %}
+                    <p><strong>Styles:</strong> {{ album.styles|join(', ') }}</p>
+                    {% endif %}
+                    {% if album.themes %}
+                    <p><strong>Themes:</strong> {{ album.themes|join(', ') }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
+    {% endif %}
+
+    <h3>Help Rate This Tab by Voting Up or Down</h3>
+    <span id="vote_form">
+        <div data-role="controlgroup">
+            <a href="#" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all" id="voteup">Vote Up</a>
+            <a href="#" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all" id="votedown">Vote Down</a>
+        </div>
+    </span>
+    <h5>Rating: <span style="color: red">-{{ tab.vote_no }}</span> <span style="color: green">+{{ tab.vote_yes }}</span></h5>
+
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3><a name="comments_heading">Add Your Comments / Edits to This Music</a></h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        {% if comments_form.errors %}
+            <h4 class="error" id="errors">Error!</h4>
+            <ul>
+            {% for field in comments_form %}
+                {% if field.errors %}
+                <li>
+                    <strong class="error">{{ field.label }}</strong> - {% for error in field.errors %}{{ error }}{% endfor %}
+                </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form id="comments_form" method="POST" data-ajax="false">
+            <label for="name" class="ui-hidden-accessible">Name:</label>
+            <input type="text" name="name" id="name" placeholder="Enter Name" value="{{ comments_form.name.value }}"/>
+
+            <label for="email" class="ui-hidden-accessible">E-mail:</label>
+            <input type="text" name="email" id="email" placeholder="Enter E-mail" value="{{ comments_form.email.value }}"/>
+
+            <label for="website" class="ui-hidden-accessible">Website:</label>
+            <input type="text" name="website" id="website" placeholder="Enter Website URL eg. http://www.mywebsite.com/" value="{{ comments_form.website.value }}"/>
+
+            <label for="comment" class="ui-hidden-accessible">Comment:</label>
+            <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here">{{ comments_form.comment.value }}</textarea>
+            {{ comments_form.captcha }}
+            <input type="submit" value="Submit" data-icon="check" data-iconpos="right" data-inline="true">
+        </form>
+      </div>
+    </div>
+
+    {% if comments %}
+    <div class="ui-corner-all custom-corners" style="margin-top:20px;">
+      <div class="ui-bar ui-bar-a">
+        <h3>Comments for This Music</h3>
+      </div>
+      <div class="ui-body ui-body-a">
+        <ul data-role="listview">
+        {% for comment in comments %}
+            <li><h2>{{ comment.name }}</h2> <p>{{ comment.comment }}</p></li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if suggested_tabs %}
+    <h3>Other Songs Like This</h3>
+    <ul data-role="listview" data-inset="true">
+    {% for suggested_tab in suggested_tabs %}
+        <li>
+            <a href="{{ suggested_tab.url }}" data-ajax="false">
+                <strong>{{ suggested_tab.name }}</strong> by {{ suggested_tab.band }}
+                <span style="color: red">-{{ suggested_tab.vote_no }}</span> <span style="color: green">+{{ suggested_tab.vote_yes }}</span>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div id="chord_popup">
+        <a href="#" class="chord_popup_close"><span class="close_button">x</span></a>
+        <div id="chord_popup_diagram"></div>
+    </div>
+
+    <p style="text-align: center">Copyright &copy; 2016</p>
+
+    </div> <!-- end content -->
+
+    <div data-role="footer" data-position="fixed" id="tab_page_footer">
+        <a href="#" class="ui-btn ui-btn-inline ui-corner-all ui-icon-delete" id="close_ad_button_footer">Close Ad</a>
+        <!-- mobile_ad4 -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:320px;height:100px"
+             data-ad-client="ca-pub-9811013802250997"
+             data-ad-slot="8121812083"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div><!-- /footer -->
+
+</div>
