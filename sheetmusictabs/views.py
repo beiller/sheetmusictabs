@@ -278,7 +278,7 @@ def tab_page(request, tab_id):
 
 def tab_page_json(request, tab_id):
     database_data = tab_data(tab_id)
-    return_data = {
+    return_data = [{
         'tab': {
             'id': database_data['tab'].id,
             'name': database_data['tab'].name,
@@ -287,7 +287,7 @@ def tab_page_json(request, tab_id):
             'hit_count': database_data['tab'].hit_count,
             'vote_yes': database_data['tab'].vote_yes
         }
-    }
+    }]
     return HttpResponse(return_data, content_type='application/json; encoding=utf-8')
 
 
