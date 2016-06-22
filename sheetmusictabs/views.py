@@ -277,16 +277,11 @@ def tab_page(request, tab_id):
 
 
 def tab_page_json(request, tab_id):
-    data = tab_data(tab_id)
-    return JsonResponse(
-        {
-            'tab': serializers.serialize("json", data.tab),
-            'suggested_tabs': serializers.serialize("json", data.suggested_tabs),
-            'comments': serializers.serialize("json", data.comments),
-            'band_info': serializers.serialize("json", data.band_info),
-            'extended_info': serializers.serialize("json", data.extended_info),
-        }
-    )
+    obj = tab_data(tab_id)
+    data = serializers.serialize('json', [obj['tab'],])
+    struct = json.loads(data)
+    data = json.dumps(struct[0])
+    return HttpResponse(data, mimetype='application/json')
 
 
 def similar(seq1, seq2):
