@@ -280,8 +280,8 @@ def tab_page_json(request, tab_id):
     obj = tab_data(tab_id)
     data = serializers.serialize('json', [obj['tab'],])
     struct = json.loads(data)
-    data = json.dumps(struct[0])
-    return HttpResponse(data, mimetype='application/json')
+    data = json.dumps(struct[0], ensure_ascii="False")
+    return HttpResponse(data, content_type='application/json; encoding=utf-8')
 
 
 def similar(seq1, seq2):
