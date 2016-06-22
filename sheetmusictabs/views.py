@@ -288,7 +288,7 @@ def tab_page_json(request, tab_id):
             'vote_yes': database_data['tab'].vote_yes
         }
     }]
-    return HttpResponse(return_data, content_type='application/json; encoding=utf-8')
+    return JsonResponse(return_data, content_type='application/json; encoding=utf-8', safe=False)
 
 
 def similar(seq1, seq2):
