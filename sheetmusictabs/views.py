@@ -285,8 +285,13 @@ def tab_page_json(request, tab_id):
             'band': database_data['tab'].band,
             'tab': database_data['tab'].tab,
             'hit_count': database_data['tab'].hit_count,
-            'vote_yes': database_data['tab'].vote_yes
-        }
+            'vote_yes': database_data['tab'].vote_yes,
+            'vote_no': database_data['tab'].vote_no
+        },
+        'suggested_tabs': [{'id': t.id, 'name': t.name, 'band': t.band} for t in database_data['suggested_tabs']],
+        'comments': [{'id': t.id, 'tab': t.tab, 'name': t.name, 'comment': t.comment, 'spam': t.spam} for t in database_data['comments']],
+        'band_info': [{'band_name': t.band_name, 'genres': t.genres, 'origin': t.origin, 'years_active': t.years_active, 'members': t.members} for t in database_data['band_info']],
+        'extended_info': database_data['extended_info']
     }
     return JsonResponse(return_data, content_type='application/json; encoding=utf-8', safe=False)
 
