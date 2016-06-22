@@ -277,11 +277,18 @@ def tab_page(request, tab_id):
 
 
 def tab_page_json(request, tab_id):
-    obj = tab_data(tab_id)
-    data = serializers.serialize('json', [obj['tab'],])
-    struct = json.loads(data)
-    data = json.dumps(struct[0], ensure_ascii="False")
-    return HttpResponse(data, content_type='application/json; encoding=utf-8')
+    database_data = tab_data(tab_id)
+    return_data = {
+        'tab': {
+            'id': database_data['tab'].id,
+            'name': database_data['tab'].name,
+            'band': database_data['tab'].band,
+            'tab': database_data['tab'].tab,
+            'hit_count': database_data['tab'].hit_count,
+            'vote_yes': database_data['tab'].vote_yes
+        }
+    }
+    return HttpResponse(return_data, content_type='application/json; encoding=utf-8')
 
 
 def similar(seq1, seq2):
