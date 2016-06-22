@@ -276,7 +276,7 @@ def tab_page(request, tab_id):
 
 
 def tab_page_json(request, tab_id):
-    return JsonResponse(tab_data(request, tab_id), safe=True)
+    return str(tab_data(request, tab_id))
 
 
 def similar(seq1, seq2):
