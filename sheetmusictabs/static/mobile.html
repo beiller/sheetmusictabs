@@ -250,13 +250,16 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                 cache: false,
                 success: function (file_html) {
                     // success
-                    var tpl = swig.compile(file_html);
-                    var template = $(tpl({ tab: { name: 'Swig is fun!' }}));
-                    $('body').append(
-                        template
-                    )
-                    //template.enhanceWithin();
-                    $.mobile.changePage("#tab-page");
+                    $.getJSON( "https://www.sheet-music-tabs.com/bands/W/Weezer+tabs/316665/Say+It+Aint+So+Chords.json", function( data ) {
+                        var tpl = swig.compile(file_html);
+                        var template = $(tpl(data));
+                        $('body').append(
+                            template
+                        )
+                        //template.enhanceWithin();
+                        $.mobile.changePage("#tab-page");
+                    });
+
                 }
             });
         }
