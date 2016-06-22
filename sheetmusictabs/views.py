@@ -10,6 +10,7 @@ import settings
 import re
 from django import forms
 from captcha.fields import ReCaptchaField
+from django.core import serializers
 
 
 class CommentForm(forms.Form):
@@ -180,42 +181,7 @@ def band_page(request, band_name):
     })
 
 
-def tab_data(request, tab_id):
-    try:
-        tab_id = int(tab_id)
-    except ValueError:
-        raise Http404()
-
-    form = CommentForm()
-    scroll_to = False
-    if request.method == 'POST' and 'method' in request.POST and request.POST['method'] == 'vote':
-        tab = Tabs.objects.get(id=request.POST['tabid'])
-        if request.POST['submit'] == 'votedown':
-            tab.vote_no += 1
-            tab.save()
-        elif request.POST['submit'] == 'voteup':
-            tab.vote_yes += 1
-            tab.save()
-            return JsonResponse({'success': True})
-    elif request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
-            if detect_spam_by_content(form.cleaned_data['comment']):
-                is_spam = True
-            if not is_spam:
-                c = Comment(
-                    name=form.cleaned_data['name'],
-                    ip=request.META.get('REMOTE_ADDR'),
-                    comment=form.cleaned_data['comment'],
-                    tab_id=tab_id,
-                    spam=0
-                )
-                c.save()
-                scroll_to = '$(document).height()'
-        else:
-            scroll_to = '$("#errors").offset().top'
-
+def tab_data(tab_id):
     tab = Tabs.objects.get(pk=tab_id)
     tab.hit_count += 1
     tab.save()
@@ -264,19 +230,63 @@ def tab_data(request, tab_id):
         'suggested_tabs': suggested_tabs,
         'comments': comments,
         'band_info': band_info,
-        'comments_form': form,
-        'scroll_to': scroll_to,
         'extended_info': extended_info,
         'site_globals': settings.SITE_GLOBALS
     }
 
 
 def tab_page(request, tab_id):
-    return render(request, 'tab.html', tab_data(request, tab_id))
+    try:
+        tab_id = int(tab_id)
+    except ValueError:
+        raise Http404()
+
+    form = CommentForm()
+    scroll_to = False
+    if request.method == 'POST' and 'method' in request.POST and request.POST['method'] == 'vote':
+        tab = Tabs.objects.get(id=request.POST['tabid'])
+        if request.POST['submit'] == 'votedown':
+            tab.vote_no += 1
+            tab.save()
+        elif request.POST['submit'] == 'voteup':
+            tab.vote_yes += 1
+            tab.save()
+            return JsonResponse({'success': True})
+    elif request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
+            if detect_spam_by_content(form.cleaned_data['comment']):
+                is_spam = True
+            if not is_spam:
+                c = Comment(
+                    name=form.cleaned_data['name'],
+                    ip=request.META.get('REMOTE_ADDR'),
+                    comment=form.cleaned_data['comment'],
+                    tab_id=tab_id,
+                    spam=0
+                )
+                c.save()
+                scroll_to = '$(document).height()'
+        else:
+            scroll_to = '$("#errors").offset().top'
+    data = tab_data(tab_id)
+    data['comments_form'] = form
+    data['scroll_to'] = scroll_to
+    return render(request, 'tab.html', data)
 
 
 def tab_page_json(request, tab_id):
-    return str(tab_data(request, tab_id))
+    data = tab_data(tab_id)
+    return JsonResponse(
+        {
+            'tab': serializers.serialize("json", data.tab),
+            'suggested_tabs': serializers.serialize("json", data.suggested_tabs),
+            'comments': serializers.serialize("json", data.comments),
+            'band_info': serializers.serialize("json", data.band_info),
+            'extended_info': serializers.serialize("json", data.extended_info),
+        }
+    )
 
 
 def similar(seq1, seq2):
