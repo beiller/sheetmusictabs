@@ -282,47 +282,14 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                             template
                         )
                         $.mobile.changePage("#tab-page");
+                        afterPageLoad();
                     });
 
                 }
             });
         }
 
-        head.ready(function () {
-        loadTemplate(
-            './mobile_tab.html',
-            'https://www.sheet-music-tabs.com/bands/W/Weezer+tabs/316665/Say+It+Aint+So+Chords.json'
-        );
-
-        $(document).ready(function(e) {
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie != '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            var csrftoken = getCookie('csrftoken');
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
+        function afterPageLoad() {
             $('#main_search').submit(function(e) {
                 var q = $('#search_string').val();
                 $.getJSON('/ajax/search?q='+q, function(data) {
@@ -385,9 +352,40 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
             scrollWidth = document.getElementById('tab_viewer').scrollWidth;
             } catch(e) {
             }
+        }
 
-
-        }); //end onready from jquery
+        head.ready(function () {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            loadTemplate(
+                './mobile_tab.html',
+                'https://www.sheet-music-tabs.com/bands/W/Weezer+tabs/316665/Say+It+Aint+So+Chords.json'
+            );
         }); //end head ready async loading
 
     </script>
