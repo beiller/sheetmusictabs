@@ -39,6 +39,11 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
 //]]>
     </script>
     <script>
+        $.mobile.loading( "show", {
+          text: "Loading...",
+          textVisible: true
+        });
+
         head.load(
             "/static/swig.min.js",
             "https://apis.google.com/js/platform.js",
