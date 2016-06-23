@@ -277,6 +277,8 @@ def tab_page(request, tab_id):
 
 
 def tab_page_json(request, tab_id):
+    def jsonify_url(url):
+        return """javascript:loadTemplate('./mobile_tab.html', '%s')""" % url.replace('.html', '.json')
     database_data = tab_data(tab_id)
     return_data = {
         'tab': {
@@ -288,7 +290,7 @@ def tab_page_json(request, tab_id):
             'vote_yes': database_data['tab'].vote_yes,
             'vote_no': database_data['tab'].vote_no
         },
-        'suggested_tabs': [{'id': t.id, 'name': t.name, 'band': t.band, 'url': t.url, 'vote_yes': t.tab.vote_yes, 'vote_no': t.tab.vote_no} for t in database_data['suggested_tabs']],
+        'suggested_tabs': [{'id': t.id, 'name': t.name, 'band': t.band, 'url': jsonify_url(t.url), 'vote_yes': t.tab.vote_yes, 'vote_no': t.tab.vote_no} for t in database_data['suggested_tabs']],
         'comments': [{'id': t.id, 'tab': t.tab, 'name': t.name, 'comment': t.comment, 'spam': t.spam} for t in database_data['comments']],
         'band_info': {
             'band_name': database_data['band_info'].band_name,
