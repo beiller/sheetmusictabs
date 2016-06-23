@@ -168,7 +168,7 @@
             </ul>
         {% endif %}
 
-        <form id="comments_form" method="POST" data-ajax="false">
+        <form id="comments_form" method="POST" action="/ajax/comment" data-ajax="true">
             <label for="name" class="ui-hidden-accessible">Name:</label>
             <input type="text" name="name" id="name" placeholder="Enter Name" value="{{ comments_form.name.value }}"/>
 
@@ -182,6 +182,7 @@
             <textarea cols="40" rows="8" name="comment" id="comment" placeholder="Enter Your Comments Here">{{ comments_form.comment.value }}</textarea>
             {{ comments_form.captcha }}
             <input type="submit" value="Submit" data-icon="check" data-iconpos="right" data-inline="true">
+            <input type="hidden" name="tabid" value="{{ tab.id }}" />
         </form>
       </div>
     </div>

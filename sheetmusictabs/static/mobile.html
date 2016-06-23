@@ -319,11 +319,11 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
             }
             $('#voteup').click(function(e) {
                 $('#voteup').click(function() {});
-                $.ajax({type: "POST", success: voteThank, data: { 'method': 'vote', 'tabid': tab_id, 'submit': 'voteup' }});
+                $.ajax({type: "POST", url: '/ajax/vote', success: voteThank, data: { 'method': 'vote', 'tabid': tab_id, 'submit': 'voteup' }});
             });
             $('#votedown').click(function(e) {
                 $('#votedown').click(function() {});
-                $.ajax({type: "POST", success: voteThank, data: { 'method': 'vote', 'tabid': tab_id, 'submit': 'votedown' }});
+                $.ajax({type: "POST", url: '/ajax/vote', success: voteThank, data: { 'method': 'vote', 'tabid': tab_id, 'submit': 'votedown' }});
             });
 
             $('.show_diagram_link').click(close_chord_popup);
