@@ -12,5 +12,7 @@ urlpatterns = patterns('',
     url(r'^sitemap\.xml$', sheetmusictabs.views.sitemap_index),
     url(r'^sitemap([1-9][0-9]*)\.xml$', sheetmusictabs.views.sitemap),
     url(r'^ajax/search.*$', sheetmusictabs.views.search),
+    url(r'^ajax/vote.*$', sheetmusictabs.views.vote_tab),
+    url(r'^ajax/comment.*$', sheetmusictabs.views.add_comment),
     url(r'^comment_moderation.html$', sheetmusictabs.views.comment_moderation_page),
 )

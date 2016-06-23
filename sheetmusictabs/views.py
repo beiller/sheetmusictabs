@@ -235,6 +235,39 @@ def tab_data(tab_id):
     }
 
 
+def vote_tab(request):
+    if request.method == 'POST' and 'method' in request.POST and request.POST['method'] == 'vote':
+        tab = Tabs.objects.get(id=request.POST['tabid'])
+        if request.POST['submit'] == 'votedown':
+            tab.vote_no += 1
+            tab.save()
+        elif request.POST['submit'] == 'voteup':
+            tab.vote_yes += 1
+            tab.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+
+def add_comment(request):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
+            if detect_spam_by_content(form.cleaned_data['comment']):
+                is_spam = True
+            if not is_spam:
+                c = Comment(
+                    name=form.cleaned_data['name'],
+                    ip=request.META.get('REMOTE_ADDR'),
+                    comment=form.cleaned_data['comment'],
+                    tab_id=form.cleaned_data['tabid'],
+                    spam=0
+                )
+                c.save()
+            return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+
 def tab_page(request, tab_id):
     try:
         tab_id = int(tab_id)
