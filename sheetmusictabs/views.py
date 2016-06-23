@@ -290,7 +290,7 @@ def tab_page_json(request, tab_id):
             'vote_yes': database_data['tab'].vote_yes,
             'vote_no': database_data['tab'].vote_no
         },
-        'suggested_tabs': [{'id': t.id, 'name': t.name, 'band': t.band, 'url': jsonify_url(t.url), 'vote_yes': t.tab.vote_yes, 'vote_no': t.tab.vote_no} for t in database_data['suggested_tabs']],
+        'suggested_tabs': [{'id': t.id, 'name': t.name, 'band': t.band, 'url': jsonify_url(t.url), 'vote_yes': t.vote_yes, 'vote_no': t.vote_no} for t in database_data['suggested_tabs']],
         'comments': [{'id': t.id, 'tab': t.tab, 'name': t.name, 'comment': t.comment, 'spam': t.spam} for t in database_data['comments']],
         'band_info': {
             'band_name': database_data['band_info'].band_name,
