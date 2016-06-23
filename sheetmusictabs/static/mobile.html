@@ -291,6 +291,10 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
             });
         }
 
+        function jsonifyUrl(templateName, url) {
+            return 'javascript:loadTemplate("'+templateName+'", "' + url.replace('.html', '.json') + '");';
+        }
+
         function afterPageLoad() {
             $('#main_search').submit(function(e) {
                 var q = $('#search_string').val();
@@ -298,7 +302,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                   var items = [];
 
                   $.each(data, function(key, val) {
-                    items.push('<li id="' + key + '"><a href="' + val['url'] + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
+                    items.push('<li id="' + key + '"><a href="' + jsonifyUrl('./mobile_tab.html', val['url']) + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
                   });
 
                   $('#search_results_list').html('');
