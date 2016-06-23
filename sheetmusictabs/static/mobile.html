@@ -212,6 +212,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
 
+    <div data-role="page" class="tab_page" id="tab-page"></div>
 
 
     <script type="text/javascript">
@@ -269,11 +270,11 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                             templateCache[templateUrl] = tpl;
                         }
                         var template = $(tpl(data));
-                        $('body').append(
+                        $('#tab-page').replaceWith(
                             template
                         )
                         $.mobile.changePage("#tab-page");
-                        //setTimeout(function() { $.mobile.loading( "hide" ); }, 5000);
+                        setTimeout(function() { $.mobile.loading( "hide" ); }, 5000);
                     });
 
                 }
