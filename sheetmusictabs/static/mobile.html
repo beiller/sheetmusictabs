@@ -292,7 +292,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
         }
 
         function jsonifyUrl(templateName, url) {
-            return 'javascript:loadTemplate("'+templateName+'", "' + url.replace('.html', '.json') + '");';
+            return 'javascript:loadTemplate(\''+templateName+'\', \'' + url.replace('.html', '.json') + '\');';
         }
 
         function afterPageLoad() {
