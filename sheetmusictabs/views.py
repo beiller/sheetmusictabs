@@ -313,6 +313,7 @@ def tab_page_json(request, tab_id):
     def jsonify_url(url):
         return """javascript:loadTemplate('./mobile_tab.html', '%s')""" % url.replace('.html', '.json')
     database_data = tab_data(tab_id)
+    form = CommentForm()
     return_data = {
         'tab': {
             'id': database_data['tab'].id,
@@ -332,7 +333,8 @@ def tab_page_json(request, tab_id):
             'years_active': database_data['band_info'].years_active,
             'members': database_data['band_info'].members
         },
-        'extended_info': database_data['extended_info']
+        'extended_info': database_data['extended_info'],
+        'comments_form': {'captcha': form.captcha, 'name': form.name.value, 'email': form.email.value, 'website': form.website.value, 'comment': form.comment.value}
     }
     return JsonResponse(return_data, content_type='application/json; encoding=utf-8', safe=False)
 

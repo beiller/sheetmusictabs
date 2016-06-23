@@ -318,7 +318,6 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                 });
             }
             $('#voteup').click(function(e) {
-                alert('here');
                 $('#voteup').click(function() {});
                 $.ajax({type: "POST", url: '/ajax/vote', success: voteThank, data: { 'method': 'vote', 'tabid': tab_id, 'submit': 'voteup' }});
             });
