@@ -328,10 +328,10 @@ def tab_page_json(request, tab_id):
         'comments': [{'id': t.id, 'tab': t.tab, 'name': t.name, 'comment': t.comment, 'spam': t.spam} for t in database_data['comments']],
         'band_info': {
             'band_name': database_data['band_info'].band_name,
-            'genres': database_data['band_info'].genres,
+            'genres': database_data['band_info'].genres.split(','),
             'origin': database_data['band_info'].origin,
             'years_active': database_data['band_info'].years_active,
-            'members': database_data['band_info'].members
+            'members': database_data['band_info'].members.split(',')
         },
         'extended_info': database_data['extended_info']
     }
