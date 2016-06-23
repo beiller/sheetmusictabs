@@ -244,6 +244,12 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
         }
 
         function loadTemplate() {
+            $.mobile.loading( "show", {
+              text: "foo",
+              textVisible: true,
+              theme: "z",
+              html: ""
+            });
             $.ajax({
                 type: 'GET',
                 url: './mobile_tab.html',
@@ -256,8 +262,8 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                         $('body').append(
                             template
                         )
-                        //template.enhanceWithin();
                         $.mobile.changePage("#tab-page");
+                        $.mobile.loading( "hide" );
                     });
 
                 }
