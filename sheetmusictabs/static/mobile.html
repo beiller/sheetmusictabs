@@ -302,7 +302,8 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                   var items = [];
 
                   $.each(data, function(key, val) {
-                    items.push('<li id="' + key + '"><a href="' + jsonifyUrl('./mobile_tab.html', val['url']) + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
+                    var url = jsonifyUrl('./mobile_tab.html', val['url']);
+                    items.push('<li id="' + key + '"><a href="' + url + '" data-ajax="false">' + val['name'] + ' by ' + val['band'] + '</a></li>');
                   });
 
                   $('#search_results_list').html('');
