@@ -258,6 +258,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
         }
 
         var templateCache = {};
+        var tab_id;
 
         function loadTemplate(templateUrl, jsonUrl) {
             $.mobile.loading( "show", {
@@ -281,6 +282,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                         $('#tab-page').replaceWith(
                             template
                         )
+                        tab_id = data.tab.id;
                         $.mobile.changePage("#tab-page");
                         afterPageLoad();
                     });
