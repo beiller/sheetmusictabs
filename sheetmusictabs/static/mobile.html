@@ -273,7 +273,7 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                         $('#tab-page').replaceWith(
                             template
                         )
-                        setTimeout(function() { $.mobile.changePage("#tab-page"); }, 3000);
+                        $.mobile.changePage("#tab-page");
                     });
 
                 }
