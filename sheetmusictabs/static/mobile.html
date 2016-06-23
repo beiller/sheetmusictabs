@@ -243,12 +243,12 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
             }
         }
 
-        function loadTemplate() {
+        var templateCache = {};
+
+        function loadTemplate(templateUrl, jsonUrl) {
             $.mobile.loading( "show", {
-              text: "foo",
-              textVisible: true,
-              theme: "z",
-              html: ""
+              text: "Loading...",
+              textVisible: true
             });
             $.ajax({
                 type: 'GET',
@@ -256,8 +256,13 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
                 cache: false,
                 success: function (file_html) {
                     // success
-                    $.getJSON( "https://www.sheet-music-tabs.com/bands/W/Weezer+tabs/316665/Say+It+Aint+So+Chords.json", function( data ) {
-                        var tpl = swig.compile(file_html);
+                    $.getJSON( jsonUrl, function( data ) {
+                        if(templateUrl in templateCache) {
+                            var tpl = templateCache[templateUrl];
+                        } else {
+                            var tpl = swig.compile(file_html);
+                            templateCache[templateUrl] = tpl;
+                        }
                         var template = $(tpl(data));
                         $('body').append(
                             template
@@ -271,7 +276,10 @@ if(this._resizeData){if(a.x===this._resizeData.windowCoordinates.x&&a.y===this._
         }
 
         head.ready(function () {
-        loadTemplate();
+        loadTemplate(
+            "./mobile_tab.html"
+            "https://www.sheet-music-tabs.com/bands/W/Weezer+tabs/316665/Say+It+Aint+So+Chords.json"
+        );
 
         $(document).ready(function(e) {
             function getCookie(name) {
