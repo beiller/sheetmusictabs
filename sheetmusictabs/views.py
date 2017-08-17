@@ -108,7 +108,7 @@ def detect_spam_by_content(content):
     words = [
         'ugg', 'http', 'href', 'viagra', 'preteen', 'online', 'cialis', 'pharmacy',
         'prescription', 'lolita', 'nude', 'url', 'buy', 'blog', 'content', '.com',
-        'article', 'website', '. and bye.'
+        'article', 'website', '. and bye.', 'bookmark', 'penis', 'download'
     ]
     for word in words:
         if word in to_test.lower():
