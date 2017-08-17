@@ -164,7 +164,7 @@ def band_letter_page(request, band_letter):
 
 
 def comment_moderation_page(request):
-    comments = Comment.objects.filter(spam=0).order_by('-id')[:5000]
+    comments = Comment.objects.filter(spam=0).order_by('-id')[:50000]
 
     for comment in comments:
         # ' '.join([form.cleaned_data['comment'], form.cleaned_data['name']])
