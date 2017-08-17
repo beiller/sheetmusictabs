@@ -102,6 +102,8 @@ def detect_spam_by_content(content):
         content.decode('ascii')
     except UnicodeDecodeError:
         return True
+    except UnicodeEncodeError:
+        return True
     to_test = content.lower()
     words = [
         'ugg', 'http', 'href', 'viagra', 'preteen', 'online', 'cialis', 'pharmacy',
