@@ -103,9 +103,13 @@ def detect_spam_by_content(content):
     except UnicodeDecodeError:
         return True
     to_test = content.lower()
-    words = ['ugg', 'http', 'href', 'viagra', 'preteen', 'online', 'cialis', 'pharmacy', 'prescription', 'lolita', 'nude', 'url', 'buy']
+    words = [
+        'ugg', 'http', 'href', 'viagra', 'preteen', 'online', 'cialis', 'pharmacy',
+        'prescription', 'lolita', 'nude', 'url', 'buy', 'blog', 'content', '.com',
+        'article', 'website'
+    ]
     for word in words:
-        if word in to_test:
+        if word in to_test.lower():
             return True
     return False
 
@@ -159,6 +163,13 @@ def band_letter_page(request, band_letter):
 
 def comment_moderation_page(request):
     comments = Comment.objects.filter(spam=0).order_by('-id')[:5000]
+
+    for comment in comments:
+        # ' '.join([form.cleaned_data['comment'], form.cleaned_data['name']])
+        words = ' '.join([comment.comment, comment.name])
+        if detect_spam_by_content(words):
+            comment.spam = True
+            comment.save()
 
     return render(request, 'comment_moderation.html', {
         'comments': comments,
@@ -253,7 +264,7 @@ def add_comment(request):
         form = CommentForm(request.POST)
         if form.is_valid():
             is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
-            if detect_spam_by_content(form.cleaned_data['comment']):
+            if detect_spam_by_content( ' '.join([form.cleaned_data['comment'], form.cleaned_data['name']]) ):
                 is_spam = True
             if not is_spam:
                 c = Comment(
@@ -289,7 +300,7 @@ def tab_page(request, tab_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             is_spam = detect_spam_by_ip(request.META.get('REMOTE_ADDR'))
-            if detect_spam_by_content(form.cleaned_data['comment']):
+            if detect_spam_by_content( ' '.join([form.cleaned_data['comment'], form.cleaned_data['name']]) ):
                 is_spam = True
             if not is_spam:
                 c = Comment(
