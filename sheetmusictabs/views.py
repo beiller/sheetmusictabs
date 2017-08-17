@@ -168,7 +168,7 @@ def comment_moderation_page(request):
         # ' '.join([form.cleaned_data['comment'], form.cleaned_data['name']])
         words = ' '.join([comment.comment, comment.name])
         if detect_spam_by_content(words):
-            comment.spam = True
+            comment.spam = 1
             comment.save()
 
     return render(request, 'comment_moderation.html', {
