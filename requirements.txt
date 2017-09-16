@@ -1,0 +1,9 @@
+nltk
+textblob
+bs4
+pickledb
+django_recaptcha
+pymysql
+Django==1.7.9
+requests
+
